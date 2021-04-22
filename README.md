@@ -1,2 +1,2 @@
-# vanilla_cpp
-vanilla c++ template with CMake.
+# komposto.ai
+indefatigable composer who lives in the cyberspace..
