@@ -14,8 +14,7 @@ include_directories(include)
 file(GLOB SOURCES src/*.cpp)
 
 # library folders
-# add_subdirectory(lib/A_LIB_DIR)
-# add_subdirectory(lib/A_LIB_DIR)
+add_subdirectory(lib/midifile)
 
 # enable all warnings and treat them as errors in a portable way
 if (MSVC)
@@ -30,5 +29,4 @@ endif ()
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 # link libraries
-# target_link_libraries(${PROJECT_NAME} A_LIB)
-# target_link_libraries(${PROJECT_NAME} A_LIB)
+target_link_libraries(${PROJECT_NAME} midifile)
