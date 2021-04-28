@@ -1,6 +1,16 @@
 #pragma once
 
-class Pattern
+#include "motif.hpp"
+#include <vector>
+
+namespace komposto
 {
 
+class Pattern
+{
+public:
+    std::vector<Motif> motifs;
+
 };
+
+}
