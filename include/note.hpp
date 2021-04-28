@@ -9,20 +9,19 @@ namespace komposto
 
 class Note 
 {
+public:
     Timing timing_;
     Tone tone_;
     Dynamics dynamics_;
 
-public:
-    Note(Timing timing, Tone tone, Dynamics dynamics = Dynamics{}) : 
+    Note(
+        const Timing& timing, 
+        const Tone& tone, 
+        const Dynamics& dynamics = Dynamics{}) : 
         timing_(timing),
         tone_(tone),
         dynamics_(dynamics)
     {}
-
-    const Timing& get_timing() const;
-    const Tone& get_tone() const;
-    const Dynamics& get_dynamics() const;
    
 };
 

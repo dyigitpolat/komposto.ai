@@ -7,13 +7,16 @@ namespace komposto
 
 class Timing
 {
+public:
     timestamp_t start_;
     duration_t duration_;
 
-public:
-    timestamp_t get_start() const;
-    timestamp_t get_end() const;
-    duration_t get_duration() const;
+    Timing(timestamp_t start, duration_t duration) :
+        start_(start),
+        duration_(duration)
+    {}
+
+    inline timestamp_t get_end() const;
 };
 
 }

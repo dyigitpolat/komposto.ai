@@ -11,7 +11,7 @@ fraction_term_t get_random_harmonic_fraction_term()
     /* harmonic distribution should take care */
     static std::default_random_engine generator;
     // magic_number
-    double gamma = 3.5; //smaller this number, bigger the results.
+    const double gamma = 3.5; //smaller this number, bigger the results.
     std::exponential_distribution<double> distribution{gamma};
     /**/
     
@@ -48,7 +48,7 @@ Palette PaletteGenerator::generate() const
     // magic_number
     integer_t number_of_tones{10};
 
-    // this is madness
+    // this is madness, should use algorithms for_each
     for(int i = 0; i < number_of_tones; i++)
     {
         palette.tones.push_back(derive_random_harmonic_tone(base_tone));

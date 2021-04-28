@@ -10,6 +10,7 @@ namespace komposto
 class PaletteGenerator
 {
     frequency_t base_frequency_;
+    
 public:
     Palette generate() const;
 };

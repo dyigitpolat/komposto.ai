@@ -4,6 +4,7 @@
 
 //user headers
 #include "palette_generator.hpp"
+#include "motif_generator.hpp"
 #include "demo_menu.hpp"
 
 void hello_world()
@@ -41,6 +42,25 @@ void test_palette()
     std::cout << std::endl;
 }
 
+void test_motif()
+{
+    PaletteGenerator pg;
+    Palette p{pg.generate()};
+
+    MotifGenerator mg{p};
+    Motif m{mg.generate()};
+
+    for( Note& n : m.notes)
+    {
+        std::cout << "(" << n.tone_.ratio_.numerator_ << "/" <<
+            n.tone_.ratio_.denominator_ << " : ";
+
+        std::cout << n.timing_.duration_ << "), ";
+    }
+
+    std::cout << std::endl;
+}
+
 }
 
 int main()
@@ -58,6 +78,7 @@ int main()
     main_menu.add_menu_item({hello_world, "Hello World!"});
     main_menu.add_menu_item({test_random, "exponential random"});
     main_menu.add_menu_item({komposto::test_palette, "palette"});
+    main_menu.add_menu_item({komposto::test_motif, "motif"});
     main_menu.show();
 
     return 0;
