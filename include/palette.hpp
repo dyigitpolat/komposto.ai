@@ -10,7 +10,7 @@ namespace komposto
 class Palette
 {
 public:
-    std::vector<Tone> tones;
+    std::vector<Tone> tones_;
     
 };
 

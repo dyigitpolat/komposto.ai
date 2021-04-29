@@ -10,7 +10,7 @@ namespace komposto
 class Motif
 {
 public:
-    std::vector<Note> notes;
+    std::vector<Note> notes_;
 
 };
 

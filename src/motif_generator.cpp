@@ -3,6 +3,7 @@
 #include "komposto_types.hpp"
 
 #include <random>
+#include <algorithm>
 #include <cstdlib>
 
 namespace komposto
@@ -14,11 +15,10 @@ duration_t get_random_duration()
     /* rhythmic distribution should take care */
     static std::default_random_engine generator;
     // magic_number
-    const double gamma = 5.0; //smaller this number, bigger the results.
-    std::exponential_distribution<double> distribution{gamma};
+    std::uniform_int_distribution distribution{1, 3};
     /**/
     
-    integer_t exponent = distribution(generator)*20;
+    integer_t exponent = distribution(generator);
     duration_t time_denominator = std::pow(2.0, exponent);
     
     // get rid of magic_number, complexity and richness will help.
@@ -28,10 +28,11 @@ duration_t get_random_duration()
 const Tone& MotifGenerator::pick_tone() const
 {
     static std::default_random_engine generator;
-    const int tones_count{static_cast<int>(palette_.tones.size())};
-    std::uniform_int_distribution distribution{0, tones_count};
-
-    return palette_.tones[ distribution(generator) ];
+    const int tones_count{static_cast<int>(palette_.tones_.size())};
+    std::uniform_int_distribution distribution{0, tones_count - 1};
+    
+    //pick random
+    return palette_.tones_[ distribution(generator) ];
 }
 
 Note MotifGenerator::create_note(timestamp_t note_begin) const
@@ -58,7 +59,7 @@ Motif MotifGenerator::generate() const
         Note note{create_note(current_duration)};
         current_duration += note.timing_.duration_;
 
-        motif.notes.push_back(note);
+        motif.notes_.push_back(note);
     }
 
     return motif;

@@ -51,7 +51,7 @@ Palette PaletteGenerator::generate() const
     // this is madness, should use algorithms for_each
     for(int i = 0; i < number_of_tones; i++)
     {
-        palette.tones.push_back(derive_random_harmonic_tone(base_tone));
+        palette.tones_.push_back(derive_random_harmonic_tone(base_tone));
     }
 
     return palette;

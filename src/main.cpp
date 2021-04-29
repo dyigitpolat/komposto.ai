@@ -34,7 +34,7 @@ void test_palette()
     PaletteGenerator pg;
     Palette p{pg.generate()};
 
-    for( Tone& t : p.tones)
+    for( Tone& t : p.tones_)
     {
         std::cout << t.ratio_.numerator_ << "/" <<
             t.ratio_.denominator_ << ", ";
@@ -50,7 +50,7 @@ void test_motif()
     MotifGenerator mg{p};
     Motif m{mg.generate()};
 
-    for( Note& n : m.notes)
+    for( Note& n : m.notes_)
     {
         std::cout << "(" << n.tone_.ratio_.numerator_ << "/" <<
             n.tone_.ratio_.denominator_ << " : ";
