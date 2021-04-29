@@ -39,4 +39,17 @@ addNoteOff(...)
 
 // parameters will be calculated according to above formula.
 */
+
+/*
+PPQN/PPQ : Pulses per quarter note
+BPM : beats (quarter notes) per minute
+if BPM is 120 and PPQN is 480, 
+there are 120*480 ticks in 60 seconds
+so 1 tick takes 60 / (120*480) seconds.
+
+DEFAULT PPQN in midifile library is 120.
+
+to set custom PPQN, USE:
+MidiFile::setTicksPerQuarterNote(int ticks) 
+*/
 };
