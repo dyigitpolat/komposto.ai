@@ -34,3 +34,4 @@
 # some clutter
 build/*
 .vscode/*
+checks.json
