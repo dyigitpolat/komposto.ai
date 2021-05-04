@@ -12,6 +12,9 @@ using duration_t = floating_point_t;
 
 // tone
 using frequency_t = floating_point_t;
+using pitch_cents_t = floating_point_t;
+using octaves_t = floating_point_t;
+using semitones_t = floating_point_t;
 
 // fractionals
 using fraction_term_t = integer_t;
@@ -28,5 +31,9 @@ using rhythmic_complexity_t = floating_point_t;
 // richness types
 using harmonic_richness_t = floating_point_t;
 using rhythmic_richness_t = floating_point_t;
+
+// midi
+using midi_key_t = integer_t;
+using midi_pitch_bend_t = floating_point_t;
 
 }
