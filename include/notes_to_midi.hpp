@@ -11,9 +11,31 @@ namespace komposto
     
 class NotesToMidi
 {
+
 public:
     void generate_midi_file(
         const std::vector<Note> &notes, const std::string &file_name);
+
+private:
+    struct MidiTone
+    {
+        midi_key_t midi_key_;
+        midi_pitch_bend_t midi_pitch_bend_amount_;
+    };
+
+    midi_velocity_t get_velocity_midi_value(
+        const velocity_t velocity) const;
+    midi_time_tick_t get_midi_time_tick(
+        const timestamp_t timestamp) const;
+    octaves_t octaves(const frequency_t x, const frequency_t base) const;
+    semitones_t semitones_from_middle_a(const midi_key_t key) const;
+    midi_key_t frequency_to_midi_key(const frequency_t frequency) const;
+    frequency_t midi_key_to_frequency(const midi_key_t key) const;
+    midi_pitch_bend_t pitch_bend_amount(
+        const frequency_t x, 
+        const frequency_t base) const;
+    MidiTone frequency_to_midi_tone(frequency_t frequency) const;
+
 };
 
 }

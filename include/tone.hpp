@@ -18,8 +18,10 @@ public:
         ratio_(ratio)
     {}
     
-    inline frequency_t get_frequency() const;
-
+    inline frequency_t get_frequency() const
+    {
+        return base_frequency_ * ratio_;
+    }
 };
 
 }

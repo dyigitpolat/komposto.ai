@@ -15,6 +15,7 @@ file(GLOB SOURCES src/*.cpp)
 
 # library folders
 add_subdirectory(lib/midifile)
+include_directories(lib/midifile/include)
 
 # enable all warnings and treat them as errors in a portable way
 if (MSVC)

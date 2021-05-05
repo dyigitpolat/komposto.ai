@@ -16,7 +16,10 @@ public:
         duration_(duration)
     {}
 
-    inline timestamp_t get_end() const;
+    inline timestamp_t get_end() const
+    {
+        return start_ + duration_;
+    } 
 };
 
 }

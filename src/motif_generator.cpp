@@ -39,8 +39,9 @@ Note MotifGenerator::create_note(timestamp_t note_begin) const
 {
     Timing timing{note_begin, get_random_duration()};
     Tone tone{pick_tone()};
+    Dynamics dynamics{1.0};
 
-    return Note{timing, tone};
+    return Note{timing, tone, dynamics};
 }
 
 Motif MotifGenerator::generate() const
@@ -49,7 +50,7 @@ Motif MotifGenerator::generate() const
 
     // this will be handled by rhythmic distribution modifiers
     // magic_number
-    integer_t number_of_notes{5};
+    integer_t number_of_notes{20};
 
     // this is madness, should use algorithms for_each
     duration_t current_duration{};

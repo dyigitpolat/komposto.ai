@@ -34,6 +34,8 @@ using rhythmic_richness_t = floating_point_t;
 
 // midi
 using midi_key_t = integer_t;
+using midi_velocity_t = integer_t;
 using midi_pitch_bend_t = floating_point_t;
+using midi_time_tick_t = integer_t;
 
 }

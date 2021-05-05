@@ -5,6 +5,7 @@
 //user headers
 #include "palette_generator.hpp"
 #include "motif_generator.hpp"
+#include "notes_to_midi.hpp"
 #include "demo_menu.hpp"
 
 void hello_world()
@@ -31,7 +32,7 @@ namespace komposto
 
 void test_palette()
 {
-    PaletteGenerator pg;
+    PaletteGenerator pg{440};
     Palette p{pg.generate()};
 
     for( Tone& t : p.tones_)
@@ -44,7 +45,7 @@ void test_palette()
 
 void test_motif()
 {
-    PaletteGenerator pg;
+    PaletteGenerator pg{440};
     Palette p{pg.generate()};
 
     MotifGenerator mg{p};
@@ -59,6 +60,18 @@ void test_motif()
     }
 
     std::cout << std::endl;
+}
+
+void test_midi()
+{
+    PaletteGenerator pg{410};
+    Palette p{pg.generate()};
+
+    MotifGenerator mg{p};
+    Motif m{mg.generate()};
+
+    NotesToMidi n2m{};
+    n2m.generate_midi_file(m.notes_, "test.mid");
 }
 
 }
@@ -79,6 +92,7 @@ int main()
     main_menu.add_menu_item({test_random, "exponential random"});
     main_menu.add_menu_item({komposto::test_palette, "palette"});
     main_menu.add_menu_item({komposto::test_motif, "motif"});
+    main_menu.add_menu_item({komposto::test_midi, "midi"});
     main_menu.show();
 
     return 0;
