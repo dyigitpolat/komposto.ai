@@ -48,7 +48,7 @@ midi_pitch_bend_t NotesToMidi::pitch_bend_amount(
     return 
         octaves(x, base)
         * k__cents_in_octave 
-        / k__midi_pitch_bend_range;
+        / k__midi_pitch_bend_range_cents;
 }
 
 NotesToMidi::MidiTone NotesToMidi::frequency_to_midi_tone(
@@ -100,6 +100,10 @@ void NotesToMidi::generate_midi_file(
         
         midi_time_tick_t midi_ticks_end = 
             get_midi_time_tick(note.timing_.get_end()) - 2;
+
+        midi_file.setPitchBendRange(
+                track, midi_ticks_start, channel, 
+                k__midi_pitch_bend_range_semitones);
 
         midi_file.addPitchBend(
             track, midi_ticks_start, channel, tone.midi_pitch_bend_amount_);
