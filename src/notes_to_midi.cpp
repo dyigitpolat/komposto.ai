@@ -74,7 +74,7 @@ midi_velocity_t NotesToMidi::get_velocity_midi_value(
 }
 
 midi_time_tick_t NotesToMidi::get_midi_time_tick(
-        const timestamp_t timestamp) const
+        const timestamp_beats_t timestamp) const
 {
     return static_cast<midi_time_tick_t>(timestamp * k__midi_ticks_per_beat);
 }

@@ -8,15 +8,15 @@ namespace komposto
 class Timing
 {
 public:
-    timestamp_t start_;
-    duration_t duration_;
+    timestamp_beats_t start_;
+    duration_beats_t duration_;
 
-    Timing(timestamp_t start, duration_t duration) :
+    Timing(timestamp_beats_t start, duration_beats_t duration) :
         start_(start),
         duration_(duration)
     {}
 
-    inline timestamp_t get_end() const
+    inline timestamp_beats_t get_end() const
     {
         return start_ + duration_;
     } 

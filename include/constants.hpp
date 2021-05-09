@@ -4,6 +4,9 @@
 
 #include <limits>
 
+// forward declarations
+class Dynamics;
+
 namespace komposto
 {
 
@@ -16,6 +19,10 @@ constexpr frequency_t k__middle_a_frequency{440.0};
 constexpr frequency_t k__equal_temparament_exponent{2.0};
 constexpr integer_t k__equal_temparament_steps{12};
 constexpr pitch_cents_t k__cents_in_octave{k__equal_temparament_steps * 100.0};
+
+// komposto defaults
+constexpr velocity_t k__default_velocity{1.0};
+constexpr Dynamics k__default_dynamics{k__default_velocity};
 
 // MIDI
 constexpr integer_t k__middle_a_midi_key{69};

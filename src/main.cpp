@@ -5,6 +5,7 @@
 //user headers
 #include "palette_generator.hpp"
 #include "motif_generator.hpp"
+#include "rhythmic_motif_generator.hpp"
 #include "notes_to_midi.hpp"
 #include "demo_menu.hpp"
 
@@ -48,8 +49,10 @@ void test_motif()
     PaletteGenerator pg{440};
     Palette p{pg.generate()};
 
-    MotifGenerator mg{p};
-    Motif m{mg.generate()};
+    RhythmicMotifGenerator rmg{};
+
+    MotifGenerator mg{rmg};
+    Motif m{mg.generate(p, 4)};
 
     for( Note& n : m.notes_)
     {
@@ -64,11 +67,13 @@ void test_motif()
 
 void test_midi()
 {
-    PaletteGenerator pg{410};
+    PaletteGenerator pg{440};
     Palette p{pg.generate()};
 
-    MotifGenerator mg{p};
-    Motif m{mg.generate()};
+    RhythmicMotifGenerator rmg{};
+
+    MotifGenerator mg{rmg};
+    Motif m{mg.generate(p, 4)};
 
     NotesToMidi n2m{};
     n2m.generate_midi_file(m.notes_, "test.mid");

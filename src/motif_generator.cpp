@@ -1,6 +1,7 @@
 #include "motif_generator.hpp"
 
 #include "komposto_types.hpp"
+#include "constants.hpp"
 
 #include <random>
 #include <algorithm>
@@ -9,60 +10,31 @@
 namespace komposto
 {
 
-/* should be a member of rhytmic distribution */
-duration_t get_random_duration()
+const Tone& MotifGenerator::pick_tone(const Palette &palette) const
 {
-    /* rhythmic distribution should take care */
     static std::default_random_engine generator;
-    // magic_number
-    std::uniform_int_distribution distribution{1, 3};
-    /**/
-    
-    integer_t exponent = distribution(generator);
-    duration_t time_denominator = std::pow(2.0, exponent);
-    
-    // get rid of magic_number, complexity and richness will help.
-    return 1.0 / time_denominator;
-}
 
-const Tone& MotifGenerator::pick_tone() const
-{
-    static std::default_random_engine generator;
-    const int tones_count{static_cast<int>(palette_.tones_.size())};
+    const int tones_count{static_cast<int>(palette.tones_.size())};
     std::uniform_int_distribution distribution{0, tones_count - 1};
     
     //pick random
-    return palette_.tones_[ distribution(generator) ];
+    return palette.tones_[ distribution(generator) ];
 }
 
-Note MotifGenerator::create_note(timestamp_t note_begin) const
-{
-    Timing timing{note_begin, get_random_duration()};
-    Tone tone{pick_tone()};
-    Dynamics dynamics{1.0};
-
-    return Note{timing, tone, dynamics};
-}
-
-Motif MotifGenerator::generate() const
+Motif MotifGenerator::generate(
+    const Palette &palette, integer_t motif_beats) const
 {
     Motif motif{};
 
-    // this will be handled by rhythmic distribution modifiers
-    // magic_number
-    integer_t number_of_notes{20};
+    RhythmicMotif rhytmic_motif = 
+        rhythmic_motif_generator_.generate(motif_beats);
 
-    // this is madness, should use algorithms for_each
-    duration_t current_duration{};
-    for(int i = 0; i < number_of_notes; i++)
-    {
-        // not necessarily a note. may be a tacet or a chord
-        Note note{create_note(current_duration)};
-        current_duration += note.timing_.duration_;
-
-        motif.notes_.push_back(note);
-    }
-
+    std::for_each(rhytmic_motif.timings_.begin(), rhytmic_motif.timings_.end(),
+        [&motif, &palette, this](const Timing &timing){
+            motif.notes_.emplace_back(
+                timing, pick_tone(palette), k__default_dynamics);
+    });
+    
     return motif;
 }
 
