@@ -1,58 +1,179 @@
 #include "palette_generator.hpp"
 
+#include "constants.hpp"
+#include "harmonizer.hpp"
+
 #include <random>
+#include <vector>
+#include <algorithm>
 
 namespace komposto
 {
 
-/* should be a member of harmonic distribution */
-fraction_term_t get_random_harmonic_fraction_term()
+enum WideningDirection : int
 {
-    /* harmonic distribution should take care */
-    static std::default_random_engine generator;
-    // magic_number
-    const double gamma = 3.5; //smaller this number, bigger the results.
-    std::exponential_distribution<double> distribution{gamma};
-    /**/
+    k__widen_downwards = 0,
+    k__widen_upwards = 1
+};
+
+Ratio PaletteGenerator::unisonic_widen(const Ratio &harmonic_ratio)
+{
+    static std::random_device device;
+    static std::mt19937 engine(device());
+
+    std::discrete_distribution<> widening_decision_distribution(
+        {1. - k__default_widening_probability, 
+        k__default_widening_probability});
+
+    std::uniform_int_distribution<> widening_direction_distribution(
+        k__widen_downwards, k__widen_upwards
+    );
+
+    bool decided_widening{1 == widening_decision_distribution(engine)}; 
+    WideningDirection direction{widening_direction_distribution(engine)}; 
+
+    if(false == decided_widening)
+    {
+        return harmonic_ratio;
+    }
+
+    if(k__widen_downwards == direction)
+    {
+        denominator_t modified_denominator{harmonic_ratio.denominator_ * 2};
+        return Ratio(harmonic_ratio.numerator_, modified_denominator);
+    }
+    else
+    {
+        numerator_t modified_numerator{harmonic_ratio.numerator_ * 2};
+        return Ratio(modified_numerator, harmonic_ratio.denominator_);
+    }
+}
+
+Ratio PaletteGenerator::unisonic_simplify(const Ratio &harmonic_ratio)
+{
+    numerator_t simplified_numerator{harmonic_ratio.numerator_};
+    denominator_t simplified_denominator{harmonic_ratio.denominator_};
+
+    while(0 == simplified_numerator % 2) 
+    {
+        simplified_numerator /= 2;
+    }
+
+    while(0 == simplified_denominator % 2) 
+    {
+        simplified_denominator /= 2;
+    }
+
+    return Ratio{simplified_numerator, simplified_denominator};
+}
+
+std::vector<floating_point_t> PaletteGenerator::generate_likelihood_weights(
+    const std::vector<Ratio> &harmonic_ratios) const
+{
+    std::vector<floating_point_t> weights;
+    std::vector<Ratio> simplified_harmonic_ratios{};
+
+    std::for_each(harmonic_ratios.begin(), harmonic_ratios.end(),
+        [&simplified_harmonic_ratios](const Ratio &ratio){
+            simplified_harmonic_ratios.push_back(
+                unisonic_simplify(ratio));
+        });
+
+    auto likelihood = [](const Ratio &ratio) -> auto {
+        floating_point_t loss{
+            static_cast<floating_point_t>(ratio.denominator_ * ratio.numerator_)
+            };
+        loss += k__default_likelihood_loss_modifier;
+        return 1. / loss;
+    };
+
+    std::for_each(
+        simplified_harmonic_ratios.begin(), simplified_harmonic_ratios.end(),
+        [&weights, &likelihood](const Ratio &ratio){
+            weights.push_back(likelihood(ratio));
+        });
     
-    // get rid of magic_number, complexity and richness will help.
-    return 1 + distribution(generator)*10;
+    return weights;
 }
 
-/* should be a member of harmonic distribution */
-// harmonic distribution will have several modifiers such as:
-// complexity, richness etc.
-Ratio get_random_ratio()
+std::vector<Ratio> PaletteGenerator::sample_weighted(
+    const Tuning &tuning, integer_t tones_count) const
 {
-    numerator_t numerator = get_random_harmonic_fraction_term();
-    denominator_t denominator = get_random_harmonic_fraction_term();
+    static std::random_device device;
+    static std::mt19937 engine(device());
 
-    return Ratio{numerator, denominator};
+    std::vector<floating_point_t> weights{
+        generate_likelihood_weights(tuning.harmonics_)};
+    floating_point_t total_weight{ 
+        std::accumulate(weights.begin(), weights.end(), 0.0)};
+
+    std::vector<Ratio> sampled_ratios{};
+
+    auto tuning_ratios_iterator = tuning.harmonics_.begin();
+    auto sample_probabilistically = 
+        [total_weight, &tuning_ratios_iterator, &sampled_ratios, tones_count]
+        (floating_point_t weight){
+            probability_t pick_probability{
+                tones_count * weight / total_weight};
+
+            std::discrete_distribution<> pick_distribution(
+                {1. - pick_probability, 
+                pick_probability});
+
+            if(pick_distribution(engine))
+            {
+                sampled_ratios.push_back(*tuning_ratios_iterator);
+            }
+            ++tuning_ratios_iterator;
+        };
+
+    std::for_each(weights.begin(), weights.end(), sample_probabilistically);
+    
+    if(static_cast<integer_t>(sampled_ratios.size()) >= tones_count)
+    {
+        sampled_ratios.resize(tones_count);
+    }
+    else
+    {
+        integer_t remaining{
+            tones_count - static_cast<integer_t>(sampled_ratios.size())};
+        std::sample(
+            tuning.harmonics_.begin(), tuning.harmonics_.end(), 
+            std::back_inserter(sampled_ratios), remaining, engine);
+    }
+    
+    return sampled_ratios;
 }
 
-/* member of Harmonizer? */
-Tone derive_random_harmonic_tone(const Tone& base_tone)
+std::vector<Ratio> PaletteGenerator::sample_palette_ratios(
+    integer_t tuning_p_limit, integer_t tones_count) const
 {
-    Ratio modifier{get_random_ratio()};
-    Ratio modified_ratio{base_tone.ratio_ * modifier};
+    static std::random_device device;
+    static std::mt19937 engine(device());
 
-    return Tone{base_tone.base_frequency_, modified_ratio};
+    Tuning tuning{Harmonizer::get_p_limit_tuning(tuning_p_limit)};
+    std::vector<Ratio> ratios{sample_weighted(tuning, tones_count)};
+    
+    return ratios;
 }
 
-Palette PaletteGenerator::generate() const
+Palette PaletteGenerator::generate(
+    integer_t tuning_p_limit, integer_t tones_count) const
 {
+    std::vector<Ratio> palette_ratios{sample_palette_ratios(
+        tuning_p_limit, tones_count)};
     Tone base_tone{base_frequency_};
     Palette palette{};
 
-    // this will be handled by harmonic distribution modifiers
-    // magic_number
-    integer_t number_of_tones{10};
+    std::for_each(palette_ratios.begin(), palette_ratios.end(),
+        [&palette, this](const Ratio& ratio){
+            palette.tones_.emplace_back(base_frequency_, ratio);
+        });
 
-    // this is madness, should use algorithms for_each
-    for(int i = 0; i < number_of_tones; i++)
-    {
-        palette.tones_.push_back(derive_random_harmonic_tone(base_tone));
-    }
+    std::for_each(palette.tones_.begin(), palette.tones_.end(),
+        [&palette, this](Tone &tone){
+            tone.ratio_ = unisonic_widen(tone.ratio_);
+        }); 
 
     return palette;
 }

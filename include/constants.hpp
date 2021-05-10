@@ -1,11 +1,9 @@
 #pragma once
 
 #include "komposto_types.hpp"
+#include "dynamics.hpp"
 
 #include <limits>
-
-// forward declarations
-class Dynamics;
 
 namespace komposto
 {
@@ -26,6 +24,10 @@ constexpr velocity_t k__default_velocity{1.0};
 constexpr Dynamics k__default_dynamics{k__default_velocity};
 constexpr integer_t k__default_head_motif_count{1};
 constexpr floating_point_t k__default_mutation_amplifier{1.25};
+constexpr probability_t k__default_widening_probability{0.25};
+constexpr integer_t k__default_tuning_p_limit{11};
+constexpr floating_point_t k__default_likelihood_loss_modifier{
+    k__default_tuning_p_limit};
 
 // MIDI
 constexpr integer_t k__middle_a_midi_key{69};

@@ -35,7 +35,7 @@ namespace komposto
 void test_palette()
 {
     PaletteGenerator pg{440};
-    Palette p{pg.generate()};
+    Palette p{pg.generate(7, 5)};
 
     for( Tone& t : p.tones_)
     {
@@ -48,7 +48,7 @@ void test_palette()
 void test_motif()
 {
     PaletteGenerator pg{440};
-    Palette p{pg.generate()};
+    Palette p{pg.generate(11, 5)};
 
     RhythmicMotifGenerator rmg{};
 
@@ -69,7 +69,7 @@ void test_motif()
 void test_midi()
 {
     PaletteGenerator pg{440};
-    Palette p{pg.generate()};
+    Palette p{pg.generate(11, 10)};
 
     RhythmicMotifGenerator rmg{};
 
@@ -83,12 +83,12 @@ void test_midi()
 void test_pattern_with_midi()
 {
     PaletteGenerator pg{440};
-    Palette p{pg.generate()};
+    Palette p{pg.generate(7, 5)};
 
     RhythmicMotifGenerator rmg{};
     
     MotifGenerator mg{rmg};
-    Motif m{mg.generate(p, 3)};
+    Motif m{mg.generate(p, 4)};
 
     Pattern pat{ 
         PatternGenerator{

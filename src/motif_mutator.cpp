@@ -10,9 +10,9 @@ namespace komposto
 {
 
 probability_t MotifMutator::
-    calculate_mutation_proabaility(integer_t motif_beats)
+    calculate_mutation_proabaility(integer_t count_motif_notes)
 {
-    probability_t probability{1. / motif_beats};
+    probability_t probability{1. / count_motif_notes};
 
     if(probability <= k__half - k__epsilon)
     {
@@ -22,13 +22,13 @@ probability_t MotifMutator::
     return probability;
 }
 
-void MotifMutator::mutate_tone(Tone &tone, integer_t motif_beats) const
+void MotifMutator::mutate_tone(Tone &tone, integer_t count_motif_notes) const
 {
     static std::random_device device;
     static std::mt19937 engine(device());
 
     probability_t mutation_probability{
-        calculate_mutation_proabaility(motif_beats)};
+        calculate_mutation_proabaility(count_motif_notes)};
 
     std::discrete_distribution<> distribution(
         {1. - mutation_probability, mutation_probability});
@@ -43,7 +43,9 @@ void MotifMutator::mutate(Motif &motif) const
 {
     std::for_each(motif.notes_.begin(), motif.notes_.end(),
         [&motif, this](Note &note){
-            mutate_tone(note.tone_, motif.beats_);
+            mutate_tone(
+                note.tone_, 
+                static_cast<integer_t>(motif.notes_.size()));
         });
 }
 
