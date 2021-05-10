@@ -13,6 +13,7 @@ namespace komposto
 // Arithmetic
 constexpr floating_point_t k__epsilon{
     std::numeric_limits<floating_point_t>::epsilon()};
+constexpr floating_point_t k__half{0.5};
 
 // Music theory
 constexpr frequency_t k__middle_a_frequency{440.0};
@@ -23,6 +24,8 @@ constexpr pitch_cents_t k__cents_in_octave{k__equal_temparament_steps * 100.0};
 // komposto defaults
 constexpr velocity_t k__default_velocity{1.0};
 constexpr Dynamics k__default_dynamics{k__default_velocity};
+constexpr integer_t k__default_head_motif_count{1};
+constexpr floating_point_t k__default_mutation_amplifier{1.25};
 
 // MIDI
 constexpr integer_t k__middle_a_midi_key{69};

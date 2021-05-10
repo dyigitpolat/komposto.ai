@@ -5,6 +5,7 @@
 //user headers
 #include "palette_generator.hpp"
 #include "motif_generator.hpp"
+#include "pattern_generator.hpp"
 #include "rhythmic_motif_generator.hpp"
 #include "notes_to_midi.hpp"
 #include "demo_menu.hpp"
@@ -79,6 +80,26 @@ void test_midi()
     n2m.generate_midi_file(m.notes_, "test.mid");
 }
 
+void test_pattern_with_midi()
+{
+    PaletteGenerator pg{440};
+    Palette p{pg.generate()};
+
+    RhythmicMotifGenerator rmg{};
+    
+    MotifGenerator mg{rmg};
+    Motif m{mg.generate(p, 3)};
+
+    Pattern pat{ 
+        PatternGenerator{
+            MotifMutator{p}, mg 
+            }.generate(m)
+    };
+    
+    NotesToMidi n2m{};
+    n2m.generate_midi_file(pat.get_notes(), "test.mid");
+}
+
 }
 
 int main()
@@ -98,6 +119,7 @@ int main()
     main_menu.add_menu_item({komposto::test_palette, "palette"});
     main_menu.add_menu_item({komposto::test_motif, "motif"});
     main_menu.add_menu_item({komposto::test_midi, "midi"});
+    main_menu.add_menu_item({komposto::test_pattern_with_midi, "pattern midi"});
     main_menu.show();
 
     return 0;

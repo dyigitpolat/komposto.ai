@@ -38,4 +38,7 @@ using midi_velocity_t = integer_t;
 using midi_pitch_bend_t = floating_point_t;
 using midi_time_tick_t = integer_t;
 
+// probability
+using probability_t = floating_point_t;
+
 }

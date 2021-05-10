@@ -29,7 +29,7 @@ RhythmicMotif RhythmicMotifGenerator::generate(integer_t beats) const
     std::generate(sub_divisors.begin(), sub_divisors.end(), 
         get_random_divisor);
 
-    RhythmicMotif motif{};
+    RhythmicMotif motif{beats};
     timestamp_beats_t start_time{};
 
     std::for_each(sub_divisors.begin(), sub_divisors.end(),
