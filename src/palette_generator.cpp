@@ -81,7 +81,7 @@ std::vector<floating_point_t> PaletteGenerator::generate_likelihood_weights(
 
     auto likelihood = [](const Ratio &ratio) -> auto {
         floating_point_t loss{
-            static_cast<floating_point_t>(ratio.denominator_ * ratio.numerator_)
+            static_cast<floating_point_t>(ratio.denominator_ * ratio.numerator_ + 200)
             };
         loss += k__default_likelihood_loss_modifier;
         return 1. / loss;
@@ -162,6 +162,7 @@ Palette PaletteGenerator::generate(
 {
     std::vector<Ratio> palette_ratios{sample_palette_ratios(
         tuning_p_limit, tones_count)};
+
     Tone base_tone{base_frequency_};
     Palette palette{};
 
@@ -170,10 +171,12 @@ Palette PaletteGenerator::generate(
             palette.tones_.emplace_back(base_frequency_, ratio);
         });
 
+    /*
     std::for_each(palette.tones_.begin(), palette.tones_.end(),
         [&palette, this](Tone &tone){
             tone.ratio_ = unisonic_widen(tone.ratio_);
         }); 
+    */
 
     return palette;
 }

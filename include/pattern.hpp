@@ -14,12 +14,7 @@ public:
 
 public:
     std::vector<Note> get_notes() const;
-
-private:
-    void shift_and_append(
-        timestamp_beats_t shift_amount, 
-        const Motif &motif, 
-        std::vector<Note> &notes) const;
+    duration_beats_t get_duration() const;
 };
 
 }

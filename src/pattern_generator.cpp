@@ -30,9 +30,12 @@ void PatternGenerator::mutate_motifs(std::vector<Motif> &motifs) const
 }
 
 void PatternGenerator::generate_tail(
-    const Motif &base_motif, std::vector<Motif> &motifs) const
+    const Motif &base_motif, 
+    std::vector<Motif> &motifs, 
+    integer_t pattern_motif_count) const
 {
-    integer_t tail_motif_count{base_motif.beats_ - k__default_head_motif_count};
+    integer_t tail_motif_count{
+        pattern_motif_count - k__default_head_motif_count};
     
     std::fill_n(std::back_inserter(motifs), 
         tail_motif_count, Motif{base_motif});
@@ -61,11 +64,11 @@ void PatternGenerator::generate_head(
     mutate_motifs(motifs);
 }
 
-Pattern PatternGenerator::generate(const Motif &base_motif) const
+Pattern PatternGenerator::generate(const Motif &base_motif, integer_t pattern_motif_count) const
 {
     Pattern pattern{};
 
-    generate_tail(base_motif, pattern.motifs_);
+    generate_tail(base_motif, pattern.motifs_, pattern_motif_count);
     generate_head(base_motif, pattern.motifs_);
 
     return pattern;

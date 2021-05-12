@@ -21,8 +21,7 @@ public:
         timing_(timing),
         tone_(tone),
         dynamics_(dynamics)
-    {}
-   
+    {}   
 };
 
 }

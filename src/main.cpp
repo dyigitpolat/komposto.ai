@@ -1,14 +1,10 @@
+//user headers
+#include "demo_menu.hpp"
+#include "demos.hpp"
+
 //std headers
 #include <iostream> //std::cout, std::endl
 #include <random>
-
-//user headers
-#include "palette_generator.hpp"
-#include "motif_generator.hpp"
-#include "pattern_generator.hpp"
-#include "rhythmic_motif_generator.hpp"
-#include "notes_to_midi.hpp"
-#include "demo_menu.hpp"
 
 void hello_world()
 {
@@ -29,79 +25,6 @@ void test_random()
     std::cout << std::endl;
 }
 
-namespace komposto
-{
-
-void test_palette()
-{
-    PaletteGenerator pg{440};
-    Palette p{pg.generate(7, 5)};
-
-    for( Tone& t : p.tones_)
-    {
-        std::cout << t.ratio_.numerator_ << "/" <<
-            t.ratio_.denominator_ << ", ";
-    }
-    std::cout << std::endl;
-}
-
-void test_motif()
-{
-    PaletteGenerator pg{440};
-    Palette p{pg.generate(11, 5)};
-
-    RhythmicMotifGenerator rmg{};
-
-    MotifGenerator mg{rmg};
-    Motif m{mg.generate(p, 4)};
-
-    for( Note& n : m.notes_)
-    {
-        std::cout << "(" << n.tone_.ratio_.numerator_ << "/" <<
-            n.tone_.ratio_.denominator_ << " : ";
-
-        std::cout << n.timing_.duration_ << "), ";
-    }
-
-    std::cout << std::endl;
-}
-
-void test_midi()
-{
-    PaletteGenerator pg{440};
-    Palette p{pg.generate(11, 10)};
-
-    RhythmicMotifGenerator rmg{};
-
-    MotifGenerator mg{rmg};
-    Motif m{mg.generate(p, 4)};
-
-    NotesToMidi n2m{};
-    n2m.generate_midi_file(m.notes_, "test.mid");
-}
-
-void test_pattern_with_midi()
-{
-    PaletteGenerator pg{440};
-    Palette p{pg.generate(7, 5)};
-
-    RhythmicMotifGenerator rmg{};
-    
-    MotifGenerator mg{rmg};
-    Motif m{mg.generate(p, 4)};
-
-    Pattern pat{ 
-        PatternGenerator{
-            MotifMutator{p}, mg 
-            }.generate(m)
-    };
-    
-    NotesToMidi n2m{};
-    n2m.generate_midi_file(pat.get_notes(), "test.mid");
-}
-
-}
-
 int main()
 {
     //----------------------------------------------------//
@@ -118,8 +41,12 @@ int main()
     main_menu.add_menu_item({test_random, "exponential random"});
     main_menu.add_menu_item({komposto::test_palette, "palette"});
     main_menu.add_menu_item({komposto::test_motif, "motif"});
-    main_menu.add_menu_item({komposto::test_midi, "midi"});
     main_menu.add_menu_item({komposto::test_pattern_with_midi, "pattern midi"});
+    main_menu.add_menu_item({
+        komposto::test_pattern_duration, "pattern duration"});
+    main_menu.add_menu_item({komposto::test_section_with_midi, "section midi"});
+    main_menu.add_menu_item({
+        komposto::test_composition_with_midi, "composition midi"});
     main_menu.show();
 
     return 0;
