@@ -81,11 +81,22 @@ Tuning Harmonizer::get_just_harmonic_minor_tuning()
 {
     using R = Ratio;
     const std::vector<Ratio> just_harmonic_minor {
-        R{1,1}, R{9,8}, R{6,5}, R{4,3}, R{3,2}, R{8,5}, R{16,9}, R{2,1}
+        R{1,1}, R{9,8}, R{6,5}, R{4,3}, R{3,2}, R{8,5}, R{7,4}, R{2,1}
     };
 
     return Tuning{just_harmonic_minor};
 }
+
+Tuning Harmonizer::get_just_grave_minor_tuning()
+{
+    using R = Ratio;
+    const std::vector<Ratio> just_grave_minor {
+        R{1,1}, R{9,8}, R{6,5}, R{4,3}, R{3,2}, R{8,5}, R{16,9}, R{2,1}
+    };
+
+    return Tuning{just_grave_minor};
+}
+
 
 Tuning Harmonizer::get_p_limit_tuning(integer_t prime_p)
 {

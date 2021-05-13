@@ -15,6 +15,7 @@ public:
     static Tuning get_just_major_tuning();
     static Tuning get_just_minor_tuning();
     static Tuning get_just_harmonic_minor_tuning();
+    static Tuning get_just_grave_minor_tuning();
 
 private:
     static Tuning get_5_limit_tuning();
