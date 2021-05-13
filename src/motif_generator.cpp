@@ -25,7 +25,8 @@ Motif MotifGenerator::generate(
 {
     Motif motif{rhythmic_motif.beats_};
 
-    std::for_each(rhythmic_motif.timings_.begin(), rhythmic_motif.timings_.end(),
+    std::for_each(
+        rhythmic_motif.timings_.begin(), rhythmic_motif.timings_.end(),
         [&motif, &palette, this](const Timing &timing){
             motif.notes_.emplace_back(
                 timing, Harmonizer::pick_tone(palette), k__default_dynamics);
