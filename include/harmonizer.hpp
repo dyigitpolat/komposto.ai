@@ -12,6 +12,9 @@ class Harmonizer
 public:
     static const Tone& pick_tone(const Palette &palette);
     static Tuning get_p_limit_tuning(integer_t prime_p);
+    static Tuning get_just_major_tuning();
+    static Tuning get_just_minor_tuning();
+    static Tuning get_just_harmonic_minor_tuning();
 
 private:
     static Tuning get_5_limit_tuning();

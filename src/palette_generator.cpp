@@ -151,7 +151,9 @@ std::vector<Ratio> PaletteGenerator::sample_palette_ratios(
     static std::random_device device;
     static std::mt19937 engine(device());
 
-    Tuning tuning{Harmonizer::get_p_limit_tuning(tuning_p_limit)};
+    //Tuning tuning{Harmonizer::get_p_limit_tuning(tuning_p_limit)};
+    tuning_p_limit = tuning_p_limit; //temp
+    Tuning tuning{Harmonizer::get_just_harmonic_minor_tuning()};
     std::vector<Ratio> ratios{sample_weighted(tuning, tones_count)};
     
     return ratios;
