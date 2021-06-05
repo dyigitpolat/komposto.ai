@@ -27,7 +27,7 @@ private:
     static integer_t calculate_tuning_p_limit(
         harmonic_complexity_t harmonic_complexity);
     static integer_t calculate_palette_tones_count(
-        harmonic_complexity_t harmonic_complexity);
+        harmonic_complexity_t harmonic_complexity, const Tuning &tuning);
 
     static integer_t calculate_motif_beats_count(
         rhythmic_complexity_t rhythmic_complexity);

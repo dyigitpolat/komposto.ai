@@ -1,21 +1,70 @@
 #include "harmonizer.hpp"
 
+#include "constants.hpp"
+
 #include <random>
 #include <vector>
+#include <algorithm>
 
 namespace komposto
 {
 
-const Tone& Harmonizer::pick_tone(const Palette &palette)
+enum class Direction
+{
+    k__up = 0,
+    k__down = 1
+};
+
+const Tone& Harmonizer::pick_tone(
+    const Palette &palette, const Tone &previous_tone)
 {
     static std::random_device device;
     static std::mt19937 engine(device());
 
-    const int tones_count{static_cast<int>(palette.tones_.size())};
-    std::uniform_int_distribution distribution{0, tones_count - 1};
+    std::discrete_distribution<> distribution(
+        {k__half, k__half});
+
+    auto previous_tone_iter = std::find_if(
+        palette.tones_.cbegin(), palette.tones_.cend(), 
+        [&previous_tone](const Tone &t)
+        {
+            return t.ratio_ == previous_tone.ratio_;
+        });
     
-    //pick random
-    return palette.tones_[ distribution(engine) ];
+    bool tone_not_found{previous_tone_iter == palette.tones_.cend()};
+    
+    if(tone_not_found)
+    {
+        return palette.tones_[0];
+    }
+
+    Direction direction{distribution(engine)};
+
+    bool is_lower_bound{previous_tone_iter == palette.tones_.cbegin()};
+    bool is_upper_bound{previous_tone_iter == std::prev(palette.tones_.cend())};
+
+    if(Direction::k__up == direction && is_upper_bound)
+    {
+        direction = Direction::k__down;
+    }
+
+    if(Direction::k__down == direction && is_lower_bound)
+    {
+        direction = Direction::k__up;
+    }
+
+    if(Direction::k__up == direction)
+    {
+       return *(std::next(previous_tone_iter));
+    }
+    else if(Direction::k__down == direction)
+    {
+       return *(std::prev(previous_tone_iter));
+    }
+    else
+    {
+        return *previous_tone_iter;
+    }
 }
 
 Tuning Harmonizer::get_5_limit_tuning()
@@ -97,6 +146,28 @@ Tuning Harmonizer::get_just_grave_minor_tuning()
     return Tuning{just_grave_minor};
 }
 
+Tuning Harmonizer::get_pythagorean_tuning(integer_t notes_count)
+{
+    using R = Ratio;
+    std::vector<Ratio> pythagorean(notes_count);
+    
+    R current_ratio = R{1,1};
+    for(R &target_ratio : pythagorean)
+    {
+        target_ratio = current_ratio;
+        current_ratio = current_ratio * R{3,2};
+    }
+
+    for(R &target_ratio : pythagorean)
+    {
+        while(target_ratio.get_frequency_factor() > 2.0)
+        {
+            target_ratio = target_ratio * R{1,2};
+        }
+    }
+
+    return Tuning{pythagorean};
+}
 
 Tuning Harmonizer::get_p_limit_tuning(integer_t prime_p)
 {

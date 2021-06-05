@@ -47,6 +47,8 @@ int main()
     main_menu.add_menu_item({komposto::test_section_with_midi, "section midi"});
     main_menu.add_menu_item({
         komposto::test_composition_with_midi, "composition midi"});
+    main_menu.add_menu_item({
+        komposto::test_pythagorean_walk, "pythagorean"});
     main_menu.show();
 
     return 0;

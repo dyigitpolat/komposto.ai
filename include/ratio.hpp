@@ -20,6 +20,7 @@ public:
     frequency_t get_frequency_factor() const;
 };
 
+bool operator==(const Ratio& ratio1, const Ratio& ratio2);
 Ratio operator*(const Ratio& ratio1, const Ratio& ratio2);
 frequency_t operator*(const Ratio& ratio, const frequency_t& frequency);
 frequency_t operator*(const frequency_t& frequency, const Ratio& ratio);

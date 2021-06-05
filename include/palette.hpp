@@ -11,6 +11,8 @@ class Palette
 {
 public:
     std::vector<Tone> tones_;
+
+    Tone get_base_tone() const;
     
 };
 

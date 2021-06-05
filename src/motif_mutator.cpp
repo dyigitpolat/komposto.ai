@@ -35,7 +35,7 @@ void MotifMutator::mutate_tone(Tone &tone, integer_t count_motif_notes) const
 
     if (distribution(engine)) 
     {
-        tone = Harmonizer::pick_tone(palette_);
+        tone = Harmonizer::pick_tone(palette_, tone);
     }   
 }
 

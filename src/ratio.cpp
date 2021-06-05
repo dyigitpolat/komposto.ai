@@ -10,6 +10,14 @@ frequency_t Ratio::get_frequency_factor() const
         static_cast<frequency_t>(denominator_);
 }
 
+bool operator==(const Ratio& ratio1, const Ratio& ratio2)
+{
+    bool are_numerators_equal = ratio1.numerator_ == ratio2.numerator_;
+    bool are_denominators_equal = ratio1.denominator_ == ratio2.denominator_;
+    
+    return are_numerators_equal && are_denominators_equal;
+}
+
 Ratio operator*(const Ratio& ratio1, const Ratio& ratio2)
 {
     numerator_t numerator = ratio1.numerator_ * ratio2.numerator_;

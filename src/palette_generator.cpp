@@ -29,10 +29,10 @@ Ratio PaletteGenerator::unisonic_widen(const Ratio &harmonic_ratio)
         k__widen_downwards, k__widen_upwards
     );
 
-    bool decided_widening{1 == widening_decision_distribution(engine)}; 
+    bool has_decided_widening{1 == widening_decision_distribution(engine)}; 
     WideningDirection direction{widening_direction_distribution(engine)}; 
 
-    if(false == decided_widening)
+    if(false == has_decided_widening)
     {
         return harmonic_ratio;
     }
@@ -81,7 +81,8 @@ std::vector<floating_point_t> PaletteGenerator::generate_likelihood_weights(
 
     auto likelihood = [](const Ratio &ratio) -> auto {
         floating_point_t loss{
-            static_cast<floating_point_t>(ratio.denominator_ * ratio.numerator_ + 200)
+            static_cast<floating_point_t>
+                (ratio.denominator_ * ratio.numerator_ + 200)
             };
         loss += k__default_likelihood_loss_modifier;
         return 1. / loss;
@@ -145,28 +146,37 @@ std::vector<Ratio> PaletteGenerator::sample_weighted(
     return sampled_ratios;
 }
 
-std::vector<Ratio> PaletteGenerator::sample_palette_ratios(
-    integer_t tuning_p_limit, integer_t tones_count) const
+std::vector<Ratio> PaletteGenerator::sample_ratios_from_tuning(
+    Tuning &tuning, integer_t tones_count) const
 {
     static std::random_device device;
     static std::mt19937 engine(device());
 
-    //Tuning tuning{Harmonizer::get_p_limit_tuning(tuning_p_limit)};
-    tuning_p_limit = tuning_p_limit; //temp
-    Tuning tuning{Harmonizer::get_just_harmonic_minor_tuning()};
     std::vector<Ratio> ratios{sample_weighted(tuning, tones_count)};
     
     return ratios;
 }
 
-Palette PaletteGenerator::generate(
-    integer_t tuning_p_limit, integer_t tones_count) const
+void PaletteGenerator::sort_ratios(std::vector<Ratio> &harmonic_ratios)
 {
-    std::vector<Ratio> palette_ratios{sample_palette_ratios(
-        tuning_p_limit, tones_count)};
+    auto compare_ratios = [](Ratio &r1, Ratio &r2)
+    {
+        return r1.get_frequency_factor() < r2.get_frequency_factor();
+    };
+
+    std::sort(harmonic_ratios.begin(), harmonic_ratios.end(), compare_ratios);
+}
+
+Palette PaletteGenerator::generate(
+    Tuning &tuning, integer_t tones_count) const
+{
+    std::vector<Ratio> palette_ratios{sample_ratios_from_tuning(
+        tuning, tones_count)};
 
     Tone base_tone{base_frequency_};
     Palette palette{};
+
+    sort_ratios(palette_ratios);
 
     std::for_each(palette_ratios.begin(), palette_ratios.end(),
         [&palette, this](const Ratio& ratio){

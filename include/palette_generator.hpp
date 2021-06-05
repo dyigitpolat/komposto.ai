@@ -16,11 +16,12 @@ public:
     PaletteGenerator(frequency_t base_frequency) :
         base_frequency_(base_frequency)
     {}
-    Palette generate(integer_t tuning_p_limit, integer_t tones_count) const;
+    Palette generate(Tuning &tuning, integer_t tones_count) const;
+    static void sort_ratios(std::vector<Ratio> &harmonic_ratios);
 
 private:
-    std::vector<Ratio> sample_palette_ratios(
-        integer_t tuning_p_limit, integer_t tones_count) const;
+    std::vector<Ratio> sample_ratios_from_tuning(
+        Tuning &tuning, integer_t tones_count) const;
     std::vector<Ratio> sample_weighted(
         const Tuning &tuning, integer_t tones_count) const;
 

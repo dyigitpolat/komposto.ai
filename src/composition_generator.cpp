@@ -1,5 +1,6 @@
 #include "constants.hpp"
 #include "composition_generator.hpp"
+#include "harmonizer.hpp"
 
 #include <random>
 
@@ -13,9 +14,9 @@ integer_t CompositionGenerator::calculate_tuning_p_limit(
 }
 
 integer_t CompositionGenerator::calculate_palette_tones_count(
-    harmonic_complexity_t harmonic_complexity)
+    harmonic_complexity_t harmonic_complexity, const Tuning &tuning)
 {
-    return harmonic_complexity * k__default_palette_diversity_factor;
+    return harmonic_complexity * tuning.harmonics_.size();
 }
 
 
@@ -53,9 +54,10 @@ Composition CompositionGenerator::generate(
 {
     Composition composition{};
 
-    integer_t tuning_p_limit{calculate_tuning_p_limit(harmonic_complexity)};
+    Tuning tuning{Harmonizer::get_just_harmonic_minor_tuning()};
+
     integer_t palette_tones_count{
-        calculate_palette_tones_count(harmonic_complexity)};
+        calculate_palette_tones_count(harmonic_complexity, tuning)};
 
     integer_t motif_beats_count{
         calculate_motif_beats_count(rhythmic_complexity)};
@@ -69,7 +71,7 @@ Composition CompositionGenerator::generate(
     Section intro{
         section_generator_.generate(
             palette_generator_.generate(
-                tuning_p_limit,palette_tones_count),
+                tuning, palette_tones_count),
             motif_beats_count,
             intro_section_patterns_count,
             intro_section_pattern_motifs_count)};
@@ -83,7 +85,7 @@ Composition CompositionGenerator::generate(
     Section solo{
         section_generator_.generate(
             palette_generator_.generate(
-                tuning_p_limit,palette_tones_count),
+                tuning, palette_tones_count),
             motif_beats_count,
             solo_section_patterns_count,
             solo_section_pattern_motifs_count)};
@@ -97,7 +99,7 @@ Composition CompositionGenerator::generate(
     Section outro{
         section_generator_.generate(
             palette_generator_.generate(
-                tuning_p_limit,palette_tones_count),
+                tuning, palette_tones_count),
             motif_beats_count,
             outro_section_patterns_count,
             outro_section_pattern_motifs_count)};
