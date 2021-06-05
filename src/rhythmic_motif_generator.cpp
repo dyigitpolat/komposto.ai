@@ -1,6 +1,6 @@
 #include "rhythmic_motif_generator.hpp"
+#include "random.hpp"
 
-#include <random>
 #include <algorithm>
 
 namespace komposto
@@ -8,8 +8,6 @@ namespace komposto
 
 integer_t RhythmicMotifGenerator::get_random_divisor()
 {
-    static std::random_device device;
-    static std::mt19937 engine(device());
     std::discrete_distribution<> distribution(
         {
         1./2.,  // 1
@@ -19,7 +17,7 @@ integer_t RhythmicMotifGenerator::get_random_divisor()
         1./16.  // 5
         });
     
-    return distribution(engine) + 1;
+    return distribution(Random::get_engine()) + 1;
 }
 
 RhythmicMotif RhythmicMotifGenerator::generate(integer_t beats) const

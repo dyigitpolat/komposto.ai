@@ -3,8 +3,8 @@
 #include "komposto_types.hpp"
 #include "constants.hpp"
 #include "harmonizer.hpp"
+#include "random.hpp"
 
-#include <random>
 #include <algorithm>
 #include <cstdlib>
 

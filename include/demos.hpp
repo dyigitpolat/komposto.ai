@@ -11,7 +11,6 @@
 #include "notes_to_midi.hpp"
 
 #include <iostream>
-#include <random>
 
 namespace komposto
 {

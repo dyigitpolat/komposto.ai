@@ -2,8 +2,8 @@
 
 #include "constants.hpp"
 #include "harmonizer.hpp"
+#include "random.hpp"
 
-#include <random>
 #include <vector>
 #include <algorithm>
 
@@ -18,9 +18,6 @@ enum WideningDirection : int
 
 Ratio PaletteGenerator::unisonic_widen(const Ratio &harmonic_ratio)
 {
-    static std::random_device device;
-    static std::mt19937 engine(device());
-
     std::discrete_distribution<> widening_decision_distribution(
         {1. - k__default_widening_probability, 
         k__default_widening_probability});
@@ -29,8 +26,11 @@ Ratio PaletteGenerator::unisonic_widen(const Ratio &harmonic_ratio)
         k__widen_downwards, k__widen_upwards
     );
 
-    bool has_decided_widening{1 == widening_decision_distribution(engine)}; 
-    WideningDirection direction{widening_direction_distribution(engine)}; 
+    bool has_decided_widening{
+        1 == widening_decision_distribution(Random::get_engine())}; 
+
+    WideningDirection direction{widening_direction_distribution(
+        Random::get_engine())}; 
 
     if(false == has_decided_widening)
     {
@@ -100,9 +100,6 @@ std::vector<floating_point_t> PaletteGenerator::generate_likelihood_weights(
 std::vector<Ratio> PaletteGenerator::sample_weighted(
     const Tuning &tuning, integer_t tones_count) const
 {
-    static std::random_device device;
-    static std::mt19937 engine(device());
-
     std::vector<floating_point_t> weights{
         generate_likelihood_weights(tuning.harmonics_)};
     floating_point_t total_weight{ 
@@ -121,7 +118,7 @@ std::vector<Ratio> PaletteGenerator::sample_weighted(
                 {1. - pick_probability, 
                 pick_probability});
 
-            if(pick_distribution(engine))
+            if(pick_distribution(Random::get_engine()))
             {
                 sampled_ratios.push_back(*tuning_ratios_iterator);
             }
@@ -140,7 +137,8 @@ std::vector<Ratio> PaletteGenerator::sample_weighted(
             tones_count - static_cast<integer_t>(sampled_ratios.size())};
         std::sample(
             tuning.harmonics_.begin(), tuning.harmonics_.end(), 
-            std::back_inserter(sampled_ratios), remaining, engine);
+            std::back_inserter(sampled_ratios), 
+            remaining, Random::get_engine());
     }
     
     return sampled_ratios;
@@ -149,9 +147,6 @@ std::vector<Ratio> PaletteGenerator::sample_weighted(
 std::vector<Ratio> PaletteGenerator::sample_ratios_from_tuning(
     Tuning &tuning, integer_t tones_count) const
 {
-    static std::random_device device;
-    static std::mt19937 engine(device());
-
     std::vector<Ratio> ratios{sample_weighted(tuning, tones_count)};
     
     return ratios;

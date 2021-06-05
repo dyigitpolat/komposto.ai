@@ -1,8 +1,8 @@
-#include "constants.hpp"
 #include "composition_generator.hpp"
-#include "harmonizer.hpp"
 
-#include <random>
+#include "constants.hpp"
+#include "harmonizer.hpp"
+#include "random.hpp"
 
 namespace komposto
 {
@@ -23,9 +23,6 @@ integer_t CompositionGenerator::calculate_palette_tones_count(
 integer_t CompositionGenerator::calculate_motif_beats_count(
     rhythmic_complexity_t rhythmic_complexity)
 {
-    static std::random_device device;
-    static std::mt19937 engine(device());
-
     std::discrete_distribution<> distribution(
         {
             0.25,
@@ -33,7 +30,7 @@ integer_t CompositionGenerator::calculate_motif_beats_count(
             0.25,
         });
 
-    integer_t beat_count_modifier{distribution(engine) - 1};
+    integer_t beat_count_modifier{distribution(Random::get_engine()) - 1};
     integer_t mean_beat_count{
         static_cast<integer_t>(
             rhythmic_complexity * k__default_beat_count_factor)};

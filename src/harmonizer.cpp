@@ -1,8 +1,8 @@
 #include "harmonizer.hpp"
 
 #include "constants.hpp"
+#include "random.hpp"
 
-#include <random>
 #include <vector>
 #include <algorithm>
 
@@ -18,9 +18,6 @@ enum class Direction
 const Tone& Harmonizer::pick_tone(
     const Palette &palette, const Tone &previous_tone)
 {
-    static std::random_device device;
-    static std::mt19937 engine(device());
-
     std::discrete_distribution<> distribution(
         {k__half, k__half});
 
@@ -38,7 +35,7 @@ const Tone& Harmonizer::pick_tone(
         return palette.tones_[0];
     }
 
-    Direction direction{distribution(engine)};
+    Direction direction{distribution(Random::get_engine())};
 
     bool is_lower_bound{previous_tone_iter == palette.tones_.cbegin()};
     bool is_upper_bound{previous_tone_iter == std::prev(palette.tones_.cend())};
