@@ -1,67 +1,16 @@
 #include "harmonizer.hpp"
 
-#include "constants.hpp"
-#include "random.hpp"
+#include "tone_picker.hpp"
 
 #include <vector>
-#include <algorithm>
 
 namespace komposto
 {
 
-enum class Direction
-{
-    k__up = 0,
-    k__down = 1
-};
-
 const Tone& Harmonizer::pick_tone(
     const Palette &palette, const Tone &previous_tone)
 {
-    std::discrete_distribution<> distribution(
-        {k__half, k__half});
-
-    auto previous_tone_iter = std::find_if(
-        palette.tones_.cbegin(), palette.tones_.cend(), 
-        [&previous_tone](const Tone &t)
-        {
-            return t.ratio_ == previous_tone.ratio_;
-        });
-    
-    bool tone_not_found{previous_tone_iter == palette.tones_.cend()};
-    
-    if(tone_not_found)
-    {
-        return palette.tones_[0];
-    }
-
-    Direction direction{distribution(Random::get_engine())};
-
-    bool is_lower_bound{previous_tone_iter == palette.tones_.cbegin()};
-    bool is_upper_bound{previous_tone_iter == std::prev(palette.tones_.cend())};
-
-    if(Direction::k__up == direction && is_upper_bound)
-    {
-        direction = Direction::k__down;
-    }
-
-    if(Direction::k__down == direction && is_lower_bound)
-    {
-        direction = Direction::k__up;
-    }
-
-    if(Direction::k__up == direction)
-    {
-       return *(std::next(previous_tone_iter));
-    }
-    else if(Direction::k__down == direction)
-    {
-       return *(std::prev(previous_tone_iter));
-    }
-    else
-    {
-        return *previous_tone_iter;
-    }
+    return TonePicker::pick_tone(palette, previous_tone);
 }
 
 Tuning Harmonizer::get_5_limit_tuning()

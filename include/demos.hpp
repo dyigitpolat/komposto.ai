@@ -25,7 +25,7 @@ static integer_t patterns_motif_count{2};
 static harmonic_complexity_t harmonic_complexity{1.0};
 static rhythmic_complexity_t rhythmic_complexity{0.3};
 
-static Tuning tuning = Harmonizer::get_just_harmonic_minor_tuning();
+static Tuning tuning = Harmonizer::get_p_limit_tuning(11);
 
 static PaletteGenerator pg{base_test_tone};
 static Palette p{pg.generate(tuning, palette_size)};
@@ -45,7 +45,7 @@ void test_reinit()
     m = mg.generate(p, motif_beats);
     pat_gen = PatternGenerator{MotifMutator{p}, mg};
     pat = pat_gen.generate(m, patterns_motif_count);
-    tuning = Harmonizer::get_just_harmonic_minor_tuning();
+    tuning = Harmonizer::get_p_limit_tuning(11);
 }
 
 void test_palette()
