@@ -10,43 +10,22 @@
 namespace komposto
 {
 
-enum WideningDirection : int
-{
-    k__widen_downwards = 0,
-    k__widen_upwards = 1
-};
-
 Ratio PaletteGenerator::unisonic_widen(const Ratio &harmonic_ratio)
 {
     std::discrete_distribution<> widening_decision_distribution(
         {1. - k__default_widening_probability, 
         k__default_widening_probability});
 
-    std::uniform_int_distribution<> widening_direction_distribution(
-        k__widen_downwards, k__widen_upwards
-    );
-
     bool has_decided_widening{
         1 == widening_decision_distribution(Random::get_engine())}; 
-
-    WideningDirection direction{widening_direction_distribution(
-        Random::get_engine())}; 
 
     if(false == has_decided_widening)
     {
         return harmonic_ratio;
     }
 
-    if(k__widen_downwards == direction)
-    {
-        denominator_t modified_denominator{harmonic_ratio.denominator_ * 2};
-        return Ratio(harmonic_ratio.numerator_, modified_denominator);
-    }
-    else
-    {
-        numerator_t modified_numerator{harmonic_ratio.numerator_ * 2};
-        return Ratio(modified_numerator, harmonic_ratio.denominator_);
-    }
+    numerator_t modified_numerator{harmonic_ratio.numerator_ * 2};
+    return Ratio(modified_numerator, harmonic_ratio.denominator_);
 }
 
 Ratio PaletteGenerator::unisonic_simplify(const Ratio &harmonic_ratio)
@@ -178,12 +157,10 @@ Palette PaletteGenerator::generate(
             palette.tones_.emplace_back(base_frequency_, ratio);
         });
 
-    /*
     std::for_each(palette.tones_.begin(), palette.tones_.end(),
         [&palette, this](Tone &tone){
             tone.ratio_ = unisonic_widen(tone.ratio_);
         }); 
-    */
 
     return palette;
 }
