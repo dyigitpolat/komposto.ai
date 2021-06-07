@@ -1,7 +1,7 @@
 #include "composition_generator.hpp"
 
 #include "constants.hpp"
-#include "harmonizer.hpp"
+#include "tuning_provider.hpp"
 #include "random.hpp"
 
 namespace komposto
@@ -51,7 +51,7 @@ Composition CompositionGenerator::generate(
 {
     Composition composition{};
 
-    Tuning tuning{Harmonizer::get_just_harmonic_minor_tuning()};
+    Tuning tuning{TuningProvider::get_just_harmonic_minor_tuning()};
 
     integer_t palette_tones_count{
         calculate_palette_tones_count(harmonic_complexity, tuning)};

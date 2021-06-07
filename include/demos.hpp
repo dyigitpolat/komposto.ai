@@ -1,6 +1,7 @@
 #pragma once
 
 #include "harmonizer.hpp"
+#include "tuning_provider.hpp"
 #include "palette_generator.hpp"
 #include "motif_generator.hpp"
 #include "palette_generator.hpp"
@@ -25,7 +26,7 @@ static integer_t patterns_motif_count{2};
 static harmonic_complexity_t harmonic_complexity{1.0};
 static rhythmic_complexity_t rhythmic_complexity{0.3};
 
-static Tuning tuning = Harmonizer::get_p_limit_tuning(11);
+static Tuning tuning = TuningProvider::get_p_limit_tuning(11);
 
 static PaletteGenerator pg{base_test_tone};
 static Palette p{pg.generate(tuning, palette_size)};
@@ -45,7 +46,7 @@ void test_reinit()
     m = mg.generate(p, motif_beats);
     pat_gen = PatternGenerator{MotifMutator{p}, mg};
     pat = pat_gen.generate(m, patterns_motif_count);
-    tuning = Harmonizer::get_p_limit_tuning(11);
+    tuning = TuningProvider::get_just_harmonic_minor_tuning();
 }
 
 void test_palette()
@@ -119,7 +120,7 @@ void test_pythagorean_walk()
 {
     test_reinit();
 
-    Tuning pyth{Harmonizer::get_pythagorean_tuning(8)};
+    Tuning pyth{TuningProvider::get_pythagorean_tuning(8)};
     PaletteGenerator::sort_ratios(pyth.harmonics_);
 
     std::vector<Note> notes;
