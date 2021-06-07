@@ -121,7 +121,7 @@ void test_pythagorean_walk()
     test_reinit();
 
     Tuning pyth{TuningProvider::get_pythagorean_tuning(8)};
-    PaletteGenerator::sort_ratios(pyth.harmonics_);
+    PaletteGenerator::sort_ratios_ascending(pyth.harmonics_);
 
     std::vector<Note> notes;
     Timing time{0,1};
