@@ -43,7 +43,7 @@ std::vector<Ratio> PaletteGenerator::sort_ratios_in_likelihood_order(
         [](const Ratio& ratio1, const Ratio& ratio2)
         {
             return calculate_likelihood_score(ratio1) 
-                < calculate_likelihood_score(ratio2);
+                > calculate_likelihood_score(ratio2);
         });
 
     return sorted_ratios;
