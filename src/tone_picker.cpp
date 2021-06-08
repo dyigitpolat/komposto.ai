@@ -20,8 +20,8 @@ const Tone& TonePicker::pick_tone(
         return *(palette.tones_.begin());
     }
 
-    tone_iterator_t next_iter = 
-        previous_tone_iter + pick_random_steps();
+    tone_iterator_t next_iter{previous_tone_iter};
+    std::advance(next_iter, pick_random_steps());
 
     tone_iterator_t clamped_iter = clamp_iterator(palette, next_iter);
 
