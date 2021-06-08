@@ -5,7 +5,6 @@
 #include "random.hpp"
 
 #include <vector>
-#include <map>
 #include <algorithm>
 
 namespace komposto
@@ -38,19 +37,13 @@ Palette PaletteGenerator::generate(
 std::vector<Ratio> PaletteGenerator::sort_ratios_in_likelihood_order(
     const std::vector<Ratio> &harmonic_ratios)
 {
-    std::map<floating_point_t, Ratio> ratios_map;
+    std::vector<Ratio> sorted_ratios{harmonic_ratios};
 
-    std::for_each(harmonic_ratios.cbegin(), harmonic_ratios.cend(),
-        [&ratios_map](const Ratio &ratio)
+    std::sort(sorted_ratios.begin(), sorted_ratios.end(), 
+        [](const Ratio& ratio1, const Ratio& ratio2)
         {
-            ratios_map[calculate_likelihood_score(ratio)] = ratio;
-        });
-
-    std::vector<Ratio> sorted_ratios(harmonic_ratios.size());
-    std::generate(sorted_ratios.begin(), sorted_ratios.end(), 
-        [ratios_map_iter = ratios_map.cbegin()]() mutable
-        {
-            return (*ratios_map_iter++).second;
+            return calculate_likelihood_score(ratio1) 
+                < calculate_likelihood_score(ratio2);
         });
 
     return sorted_ratios;
@@ -64,9 +57,8 @@ floating_point_t PaletteGenerator::calculate_likelihood_score(
     floating_point_t loss{
         static_cast<floating_point_t>
             (simplified_ratio.denominator_ + simplified_ratio.numerator_)
-        };
+    };
 
-    loss += k__default_likelihood_loss_modifier;
     return 1. / loss;
 }
 
