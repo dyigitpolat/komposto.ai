@@ -4,6 +4,8 @@
 #include "tuning_provider.hpp"
 #include "random.hpp"
 
+#include <algorithm>
+
 namespace komposto
 {
 
@@ -25,85 +27,85 @@ integer_t CompositionGenerator::calculate_motif_beats_count(
 {
     std::discrete_distribution<> distribution(
         {
-            0.25,
+            0.25 + rhythmic_complexity,
             0.50,
-            0.25,
+            0.25 + rhythmic_complexity,
         });
 
-    integer_t beat_count_modifier{distribution(Random::get_engine()) - 1};
-    integer_t mean_beat_count{
-        static_cast<integer_t>(
-            rhythmic_complexity * k__default_beat_count_factor)};
+    integer_t beat_count_modifier{distribution(Random::get_engine())};
     
-    return 2 + mean_beat_count + beat_count_modifier;
+    return k__minimum_beats_in_motif + beat_count_modifier;
 }
 
 integer_t CompositionGenerator::calculate_pattern_motifs_count(
     rhythmic_complexity_t rhythmic_complexity)
 {
-    
     return k__default_pattern_motifs_count + (rhythmic_complexity * k__zero);
+}
+
+CompositionGenerator::CompositionDraft 
+CompositionGenerator::generate_composition_draft(
+    harmonic_complexity_t harmonic_complexity,
+    rhythmic_complexity_t rhythmic_complexity)
+{
+    std::vector<SectionDraft> section_drafts;
+
+    section_drafts.emplace_back(SectionDraft{
+        2,4,2,
+        harmonic_complexity * 0.2, 
+        rhythmic_complexity * 0.2});
+
+    section_drafts.emplace_back(SectionDraft{
+        4,4,2,
+        harmonic_complexity * 0.75, 
+        rhythmic_complexity * 0.75});
+
+    section_drafts.emplace_back(SectionDraft{
+        16,2,1,
+        harmonic_complexity * 1.0, 
+        rhythmic_complexity * 1.0});
+
+    section_drafts.emplace_back(SectionDraft{
+        2,4,2,
+        harmonic_complexity * 0.2, 
+        rhythmic_complexity * 0.2});
+
+    return CompositionDraft{section_drafts};
+}
+
+Section CompositionGenerator::draft_to_section(SectionDraft draft) const
+{
+    Tuning tuning{TuningProvider::get_just_harmonic_minor_tuning()};
+
+    integer_t palette_tones_count{
+        calculate_palette_tones_count(
+            draft.section_harmonic_complexity_, tuning)};
+
+    Palette palette{palette_generator_.generate(tuning, palette_tones_count)};
+
+    return section_generator_.generate(
+        palette,
+        draft.motif_beats_count_,
+        draft.patterns_count_,
+        draft.pattern_motifs_count_
+    );
 }
 
 Composition CompositionGenerator::generate(
     harmonic_complexity_t harmonic_complexity,
     rhythmic_complexity_t rhythmic_complexity) const
 {
-    Composition composition{};
-
-    Tuning tuning{TuningProvider::get_just_harmonic_minor_tuning()};
-
-    integer_t palette_tones_count{
-        calculate_palette_tones_count(harmonic_complexity, tuning)};
-
-    integer_t motif_beats_count{
-        calculate_motif_beats_count(rhythmic_complexity)};
+    CompositionDraft draft{generate_composition_draft(
+        harmonic_complexity,
+        rhythmic_complexity)};
     
-    integer_t intro_section_patterns_count{
-        k__default_intro_section_patterns_count};
-
-    integer_t intro_section_pattern_motifs_count{
-        calculate_pattern_motifs_count(rhythmic_complexity)};
-
-    Section intro{
-        section_generator_.generate(
-            palette_generator_.generate(
-                tuning, palette_tones_count),
-            motif_beats_count,
-            intro_section_patterns_count,
-            intro_section_pattern_motifs_count)};
-
-    integer_t solo_section_patterns_count{
-        k__default_solo_section_patterns_count};
-
-    integer_t solo_section_pattern_motifs_count{
-        k__default_solo_section_pattern_motifs_count};
-
-    Section solo{
-        section_generator_.generate(
-            palette_generator_.generate(
-                tuning, palette_tones_count),
-            motif_beats_count,
-            solo_section_patterns_count,
-            solo_section_pattern_motifs_count)};
-
-    integer_t outro_section_patterns_count{
-        k__default_outro_section_patterns_count};
-
-    integer_t outro_section_pattern_motifs_count{
-        calculate_pattern_motifs_count(rhythmic_complexity)};
-
-    Section outro{
-        section_generator_.generate(
-            palette_generator_.generate(
-                tuning, palette_tones_count),
-            motif_beats_count,
-            outro_section_patterns_count,
-            outro_section_pattern_motifs_count)};
-
-    composition.sections_.push_back(intro);
-    composition.sections_.push_back(solo);
-    composition.sections_.push_back(outro);
+    Composition composition{};
+    std::for_each(draft.section_drafts_.cbegin(), draft.section_drafts_.cend(),
+        [&composition, this](SectionDraft section_draft)
+        {
+            composition.sections_.push_back(draft_to_section(section_draft));
+        }
+    );
 
     return composition;
 }
