@@ -6,16 +6,33 @@
 
 #include <algorithm>
 #include <vector>
+#include <set>
 
 namespace komposto
 {
 
-Palette PatternGenerator::get_motif_palette(const Motif& motif)
+Palette PatternGenerator::create_palette_from_motif(const Motif& motif)
 {
     Palette motif_palette{};
+
+    auto compare_tones{
+        [](const Tone& t1, const Tone& t2)
+        {
+            return t1.ratio_.get_frequency_factor() + k__epsilon 
+                < t2.ratio_.get_frequency_factor();
+        }
+    };
+
+    std::set< Tone, decltype(compare_tones) > tone_set(compare_tones);
+
     std::for_each(motif.notes_.begin(), motif.notes_.end(),
-        [&motif_palette](const Note& note){
-            motif_palette.tones_.push_back(note.tone_);
+        [&tone_set](const Note& note){
+            tone_set.insert(note.tone_);
+        });
+    
+    std::for_each(tone_set.begin(), tone_set.end(),
+        [&motif_palette](const Tone& tone){
+            motif_palette.tones_.push_back(tone);
         });
     
     return motif_palette;
@@ -49,7 +66,7 @@ Motif PatternGenerator::generate_base_head(const Motif &base_motif) const
     RhythmicMotif head_rhythmic_motif{
         rhythmic_motif_generator.generate(base_motif.beats_)};
 
-    Palette head_palette{get_motif_palette(base_motif)};
+    Palette head_palette{create_palette_from_motif(base_motif)};
 
     return Motif{
         motif_generator_.generate(head_palette, head_rhythmic_motif)};

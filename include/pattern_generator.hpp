@@ -31,7 +31,7 @@ private:
         const Motif &base_motif, std::vector<Motif> &motifs) const;
     Motif generate_base_head(const Motif &base_motif) const;
     
-    static Palette get_motif_palette(const Motif& motif);
+    static Palette create_palette_from_motif(const Motif& motif);
 };
 
 }
