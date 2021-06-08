@@ -9,6 +9,7 @@ using integer_t = long;
 // timing
 using timestamp_beats_t = floating_point_t;
 using duration_beats_t = floating_point_t;
+using duration_seconds_t = floating_point_t;
 
 // tone
 using frequency_t = floating_point_t;
