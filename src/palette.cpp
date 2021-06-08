@@ -11,7 +11,16 @@ Tone Palette::get_base_tone() const
         return t.ratio_.numerator_ == t.ratio_.denominator_;
     };
 
-    return *std::find_if(tones_.cbegin(), tones_.cend(), is_base_tone);
+    auto found_tone_iter{
+        std::find_if(tones_.cbegin(), tones_.cend(), is_base_tone)};
+
+    bool tone_not_found{found_tone_iter == tones_.cend()};
+    if(tone_not_found)
+    {
+        return *tones_.begin();
+    }
+    
+    return *found_tone_iter;
 }
 
 
