@@ -18,7 +18,12 @@ integer_t CompositionGenerator::calculate_tuning_p_limit(
 integer_t CompositionGenerator::calculate_palette_tones_count(
     harmonic_complexity_t harmonic_complexity, const Tuning &tuning)
 {
-    return harmonic_complexity * tuning.harmonics_.size();
+    integer_t tones_count{harmonic_complexity * tuning.harmonics_.size()};
+
+    if(tones_count <= 0) 
+        return 1;
+
+    return tones_count;
 }
 
 
@@ -52,21 +57,31 @@ CompositionGenerator::generate_composition_draft(
 
     section_drafts.emplace_back(SectionDraft{
         2,4,2,
-        harmonic_complexity * 0.2, 
-        rhythmic_complexity * 0.2});
+        harmonic_complexity * 0.4, 
+        rhythmic_complexity * 0.4});
 
     section_drafts.emplace_back(SectionDraft{
         4,4,2,
-        harmonic_complexity * 0.75, 
-        rhythmic_complexity * 0.75});
+        harmonic_complexity * 0.6, 
+        rhythmic_complexity * 0.6});
 
     section_drafts.emplace_back(SectionDraft{
-        16,2,1,
-        harmonic_complexity * 1.0, 
+        8,2,1,
+        harmonic_complexity * 0.8, 
+        rhythmic_complexity * 0.8});
+
+    section_drafts.emplace_back(SectionDraft{
+        8,2,1,
+        harmonic_complexity * 0.6, 
         rhythmic_complexity * 1.0});
 
     section_drafts.emplace_back(SectionDraft{
         2,4,2,
+        harmonic_complexity * 0.4, 
+        rhythmic_complexity * 0.5});
+    
+    section_drafts.emplace_back(SectionDraft{
+        4,1,1,
         harmonic_complexity * 0.2, 
         rhythmic_complexity * 0.2});
 
