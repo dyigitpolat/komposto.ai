@@ -18,7 +18,9 @@ integer_t CompositionGenerator::calculate_tuning_p_limit(
 integer_t CompositionGenerator::calculate_palette_tones_count(
     harmonic_complexity_t harmonic_complexity, const Tuning &tuning)
 {
-    integer_t tones_count{harmonic_complexity * tuning.harmonics_.size()};
+    integer_t tones_count{
+        static_cast<integer_t>(
+            harmonic_complexity * tuning.harmonics_.size())};
 
     if(tones_count <= 0) 
         return 1;
@@ -88,7 +90,7 @@ CompositionGenerator::generate_composition_draft(
     return CompositionDraft{section_drafts};
 }
 
-Section CompositionGenerator::draft_to_section(SectionDraft draft) const
+Section CompositionGenerator::generate_from_draft(SectionDraft draft) const
 {
     Tuning tuning{TuningProvider::get_just_harmonic_minor_tuning()};
 
@@ -118,7 +120,7 @@ Composition CompositionGenerator::generate(
     std::for_each(draft.section_drafts_.cbegin(), draft.section_drafts_.cend(),
         [&composition, this](SectionDraft section_draft)
         {
-            composition.sections_.push_back(draft_to_section(section_draft));
+            composition.sections_.push_back(generate_from_draft(section_draft));
         }
     );
 

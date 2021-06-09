@@ -39,7 +39,7 @@ public:
         harmonic_complexity_t harmonic_complexity,
         rhythmic_complexity_t rhythmic_complexity) const;
     
-    Section draft_to_section(SectionDraft draft) const;
+    Section generate_from_draft(SectionDraft draft) const;
 
 private:
     static CompositionDraft generate_composition_draft(

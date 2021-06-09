@@ -10,11 +10,11 @@ namespace komposto
 class RhythmicMotif
 {
 public:
-    integer_t beats_;
+    integer_t beats_count_;
     std::vector<Timing> timings_;
 
 public:
-    RhythmicMotif(integer_t beats) : beats_(beats) {}
+    RhythmicMotif(integer_t beats) : beats_count_(beats) {}
 };
 
 }

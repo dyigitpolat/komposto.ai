@@ -64,7 +64,7 @@ Motif PatternGenerator::generate_base_head(const Motif &base_motif) const
 {
     RhythmicMotifGenerator rhythmic_motif_generator{};
     RhythmicMotif head_rhythmic_motif{
-        rhythmic_motif_generator.generate(base_motif.beats_)};
+        rhythmic_motif_generator.generate(base_motif.beats_count_)};
 
     Palette head_palette{create_palette_from_motif(base_motif)};
 
@@ -81,7 +81,8 @@ void PatternGenerator::generate_head(
     mutate_motifs(motifs);
 }
 
-Pattern PatternGenerator::generate(const Motif &base_motif, integer_t pattern_motif_count) const
+Pattern PatternGenerator::generate(
+    const Motif &base_motif, integer_t pattern_motif_count) const
 {
     Pattern pattern{};
 

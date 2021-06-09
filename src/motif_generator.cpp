@@ -23,7 +23,7 @@ Motif MotifGenerator::generate(
 Motif MotifGenerator::generate(
     const Palette &palette, const RhythmicMotif &rhythmic_motif) const
 {
-    Motif motif{rhythmic_motif.beats_};
+    Motif motif{rhythmic_motif.beats_count_};
 
     Tone previous_tone{palette.get_base_tone()};
     std::for_each(
