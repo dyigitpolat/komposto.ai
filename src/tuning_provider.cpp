@@ -48,7 +48,7 @@ Tuning TuningProvider::get_just_major_tuning()
 {
     using R = Ratio;
     const std::vector<Ratio> just_major {
-        R{1,1}, R{9,8}, R{5,4}, R{4,3}, R{3,2}, R{5,3}, R{18,8}, R{2,1}
+        R{1,1}, R{9,8}, R{5,4}, R{4,3}, R{3,2}, R{5,3}, R{15,8}, R{2,1}
     };
 
     return Tuning{just_major};
