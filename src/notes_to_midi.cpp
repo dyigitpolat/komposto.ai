@@ -25,10 +25,13 @@ semitones_t NotesToMidi::semitones_from_middle_a(
 midi_key_t NotesToMidi::frequency_to_midi_key(
     const frequency_t frequency) const
 {
+    
     return 
-        octaves(frequency, k__middle_a_frequency)
-        * k__equal_temparament_steps 
-        + k__middle_a_midi_key;
+        std::round(
+            octaves(frequency, k__middle_a_frequency)
+            * k__equal_temparament_steps 
+            + k__middle_a_midi_key
+        );
 }
 
 frequency_t NotesToMidi::midi_key_to_frequency(
