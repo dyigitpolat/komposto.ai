@@ -20,12 +20,7 @@ const Tone& TonePicker::pick_tone(
         return *(palette.tones_.begin());
     }
 
-    tone_iterator_t next_iter{previous_tone_iter};
-    std::advance(next_iter, pick_random_steps());
-
-    tone_iterator_t clamped_iter = clamp_iterator(palette, next_iter);
-
-    return *(clamped_iter);
+    return *step_bounded(palette, previous_tone_iter, pick_random_steps());
 }
 
 tone_iterator_t TonePicker::find_previous_tone(
@@ -62,22 +57,45 @@ TonePicker::Direction TonePicker::pick_random_direction()
     return Direction{distribution(Random::get_engine())};
 }
 
-tone_iterator_t TonePicker::clamp_iterator(
-    const Palette &palette, const tone_iterator_t& iter)
+tone_iterator_t TonePicker::step_bounded(
+    const Palette& palette, 
+    const tone_iterator_t &iter, 
+    integer_t steps)
 {
-    bool is_underflow{iter < palette.tones_.cbegin()};
+    integer_t prev_tone_index{
+        std::distance(palette.tones_.cbegin(), iter)};
+
+    integer_t next_tone_index{
+        prev_tone_index + steps
+    };
+
+    integer_t clamped_index = clamp_index(palette, next_tone_index);
+
+    return std::next(palette.tones_.cbegin(), clamped_index);
+}
+
+integer_t TonePicker::clamp_index(
+    const Palette &palette, integer_t index)
+{
+    bool is_underflow{index < 0};
     if(is_underflow)
     {
-        return palette.tones_.cbegin();
+        return 0;
     }
 
-    bool is_overflow{iter >= palette.tones_.cend()};
+    integer_t last_element_index{
+        std::distance(
+            palette.tones_.begin(), 
+            std::prev(palette.tones_.end()))
+    };
+
+    bool is_overflow{index >= last_element_index};
     if(is_overflow)
     {
-        return std::prev(palette.tones_.cend());
+        return last_element_index;
     }
 
-    return iter;
+    return index;
 }
 
 }

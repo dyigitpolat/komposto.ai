@@ -6,7 +6,7 @@
 namespace komposto
 {
 
-using tone_iterator_t = std::vector<Tone>::const_iterator;
+using tone_iterator_t = decltype(std::begin(Palette{}.tones_));
 
 class TonePicker
 {
@@ -23,14 +23,19 @@ public:
 
 private: 
     static tone_iterator_t find_previous_tone(
-        const Palette& palette, const Tone &previous_tone); 
+        const Palette& palette, const Tone &previous_tone);
+
+    static tone_iterator_t step_bounded(
+        const Palette& palette, 
+        const tone_iterator_t &iter, 
+        integer_t steps); 
 
     static Direction pick_random_direction();
 
     static integer_t pick_random_steps();
 
-    static tone_iterator_t clamp_iterator(
-        const Palette &palette, const tone_iterator_t& iter);
+    static integer_t clamp_index(
+        const Palette &palette, integer_t index);
 };
 
 }
