@@ -31,7 +31,8 @@ static Tuning tuning = TuningProvider::get_p_limit_tuning(11);
 static PaletteGenerator pg{base_test_tone};
 static Palette p{pg.generate(tuning, palette_size)};
 static RhythmicMotifGenerator rmg{};
-static MotifGenerator mg{rmg};
+static DynamicsGenerator dyn_gen{};
+static MotifGenerator mg{rmg, dyn_gen};
 static Motif m{mg.generate(p, motif_beats)};
 static NotesToMidi n2m{};
 static PatternGenerator pat_gen{MotifMutator{p}, mg };
@@ -42,7 +43,7 @@ void test_reinit()
     pg = PaletteGenerator{base_test_tone};
     p = pg.generate(tuning, palette_size);
     rmg = RhythmicMotifGenerator{};
-    mg = MotifGenerator{rmg};
+    mg = MotifGenerator{rmg, dyn_gen};
     m = mg.generate(p, motif_beats);
     pat_gen = PatternGenerator{MotifMutator{p}, mg};
     pat = pat_gen.generate(m, patterns_motif_count);

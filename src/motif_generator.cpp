@@ -28,12 +28,15 @@ Motif MotifGenerator::generate(
     Tone previous_tone{palette.get_base_tone()};
     std::for_each(
         rhythmic_motif.timings_.begin(), rhythmic_motif.timings_.end(),
-        [&motif, &palette, &previous_tone, this](const Timing &timing){
+        [&motif, &palette, &previous_tone, this](const Timing &timing)
+        {
             Tone new_tone{Harmonizer::pick_tone(palette, previous_tone)};
+            Dynamics new_dynamics{dynamics_generator_.generate()};
+
             motif.notes_.emplace_back(
                 timing, 
                 new_tone, 
-                k__default_dynamics);
+                new_dynamics);
             previous_tone = new_tone;
         });
     
