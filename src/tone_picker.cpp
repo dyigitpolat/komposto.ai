@@ -83,19 +83,23 @@ integer_t TonePicker::clamp_index(
         return 0;
     }
 
-    integer_t last_element_index{
-        std::distance(
-            palette.tones_.begin(), 
-            std::prev(palette.tones_.end()))
-    };
+    integer_t last_tone_index{get_palette_last_tone_index(palette)};
 
-    bool is_overflow{index > last_element_index};
+    bool is_overflow{index > last_tone_index};
     if(is_overflow)
     {
-        return last_element_index;
+        return last_tone_index;
     }
 
     return index;
+}
+
+integer_t TonePicker::get_palette_last_tone_index(
+    const Palette &palette)
+{
+    return std::distance(
+        palette.tones_.cbegin(), 
+        std::prev(palette.tones_.cend()));
 }
 
 }

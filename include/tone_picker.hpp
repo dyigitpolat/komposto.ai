@@ -36,6 +36,9 @@ private:
 
     static integer_t clamp_index(
         const Palette &palette, integer_t index);
+
+    static integer_t get_palette_last_tone_index(
+        const Palette &palette);
 };
 
 }
