@@ -89,7 +89,7 @@ integer_t TonePicker::clamp_index(
             std::prev(palette.tones_.end()))
     };
 
-    bool is_overflow{index >= last_element_index};
+    bool is_overflow{index > last_element_index};
     if(is_overflow)
     {
         return last_element_index;
