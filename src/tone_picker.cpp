@@ -77,16 +77,16 @@ tone_iterator_t TonePicker::step_bounded(
 integer_t TonePicker::clamp_index(
     const Palette &palette, integer_t index)
 {
-    bool is_underflow{index < 0};
-    if(is_underflow)
+    bool underflowed{index < 0};
+    if(underflowed)
     {
         return 0;
     }
 
     integer_t last_tone_index{get_palette_last_tone_index(palette)};
 
-    bool is_overflow{index > last_tone_index};
-    if(is_overflow)
+    bool overflowed{index > last_tone_index};
+    if(overflowed)
     {
         return last_tone_index;
     }
