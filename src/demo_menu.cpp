@@ -2,6 +2,7 @@
 
 //std headers
 #include <iostream>
+#include <numeric>
 
 DemoMenu::DemoMenu(const std::string &title) : m_title{title}
 {
