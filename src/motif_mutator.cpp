@@ -6,6 +6,9 @@
 
 #include <algorithm>
 
+namespace rng = std::ranges;
+
+
 namespace komposto
 {
 
@@ -38,7 +41,7 @@ void MotifMutator::mutate_tone(Tone &tone, integer_t motif_notes_count) const
 
 void MotifMutator::mutate(Motif &motif) const
 {
-    std::for_each(motif.notes_.begin(), motif.notes_.end(),
+    rng::for_each(motif.notes_,
         [&motif, this](Note &note){
             mutate_tone(
                 note.tone_, 

@@ -5,6 +5,9 @@
 
 #include <algorithm>
 
+namespace rng = std::ranges;
+
+
 namespace komposto
 {
 
@@ -26,7 +29,7 @@ const Tone& TonePicker::pick_tone(
 tone_iterator_t TonePicker::find_previous_tone(
     const Palette& palette, const Tone &previous_tone)
 {
-    tone_iterator_t iter = std::find_if(
+    tone_iterator_t iter = rng::find_if(
         palette.tones_.cbegin(), palette.tones_.cend(), 
         [&previous_tone](const Tone &t)
         {
@@ -63,7 +66,7 @@ tone_iterator_t TonePicker::step_bounded(
     integer_t steps)
 {
     integer_t prev_tone_index{
-        std::distance(palette.tones_.cbegin(), iter)};
+        rng::distance(palette.tones_.cbegin(), iter)};
 
     integer_t next_tone_index{
         prev_tone_index + steps
@@ -71,7 +74,7 @@ tone_iterator_t TonePicker::step_bounded(
 
     integer_t clamped_index = clamp_index(palette, next_tone_index);
 
-    return std::next(palette.tones_.cbegin(), clamped_index);
+    return rng::next(palette.tones_.cbegin(), clamped_index);
 }
 
 integer_t TonePicker::clamp_index(
@@ -97,9 +100,9 @@ integer_t TonePicker::clamp_index(
 integer_t TonePicker::get_palette_last_tone_index(
     const Palette &palette)
 {
-    return std::distance(
+    return rng::distance(
         palette.tones_.cbegin(), 
-        std::prev(palette.tones_.cend()));
+        rng::prev(palette.tones_.cend()));
 }
 
 }

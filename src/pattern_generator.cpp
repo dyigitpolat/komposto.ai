@@ -8,6 +8,9 @@
 #include <vector>
 #include <set>
 
+namespace rng = std::ranges;
+
+
 namespace komposto
 {
 
@@ -25,12 +28,12 @@ Palette PatternGenerator::create_palette_from_motif(const Motif& motif)
 
     std::set< Tone, decltype(compare_tones) > tone_set(compare_tones);
 
-    std::for_each(motif.notes_.begin(), motif.notes_.end(),
+    rng::for_each(motif.notes_,
         [&tone_set](const Note& note){
             tone_set.insert(note.tone_);
         });
     
-    std::for_each(tone_set.begin(), tone_set.end(),
+    rng::for_each(tone_set,
         [&motif_palette](const Tone& tone){
             motif_palette.tones_.push_back(tone);
         });
@@ -40,7 +43,7 @@ Palette PatternGenerator::create_palette_from_motif(const Motif& motif)
 
 void PatternGenerator::mutate_motifs(std::vector<Motif> &motifs) const
 {
-    std::for_each(motifs.begin(), motifs.end(),
+    rng::for_each(motifs,
         [this](Motif &motif){
             motif_mutator_.mutate(motif);
         });
@@ -54,7 +57,7 @@ void PatternGenerator::generate_tail(
     integer_t tail_motif_count{
         pattern_motif_count - k__default_head_motif_count};
     
-    std::fill_n(std::back_inserter(motifs), 
+    rng::fill_n(std::back_inserter(motifs), 
         tail_motif_count, Motif{base_motif});
 
     mutate_motifs(motifs);
@@ -75,7 +78,7 @@ Motif PatternGenerator::generate_base_head(const Motif &base_motif) const
 void PatternGenerator::generate_head(
     const Motif &base_motif, std::vector<Motif> &motifs) const
 {
-    std::fill_n(std::back_inserter(motifs), 
+    rng::fill_n(std::back_inserter(motifs), 
         k__default_head_motif_count, generate_base_head(base_motif));
 
     mutate_motifs(motifs);

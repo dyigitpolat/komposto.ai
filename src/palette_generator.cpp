@@ -7,6 +7,9 @@
 #include <vector>
 #include <algorithm>
 
+namespace rng = std::ranges;
+
+
 namespace komposto
 {
 
@@ -26,7 +29,7 @@ Palette PaletteGenerator::generate(
     sort_ratios_ascending(palette_ratios);
 
     Palette palette{};
-    std::for_each(palette_ratios.begin(), palette_ratios.end(),
+    rng::for_each(palette_ratios,
         [&palette, this](const Ratio& ratio){
             palette.tones_.emplace_back(base_frequency_, ratio);
         });
@@ -85,7 +88,7 @@ std::vector<Ratio> PaletteGenerator::squeeze_ratios_into_octave(
 {
     std::vector<Ratio> squeezed_ratios;
     
-    std::for_each(harmonic_ratios.begin(), harmonic_ratios.end(),
+    rng::for_each(harmonic_ratios,
         [&squeezed_ratios](const Ratio &ratio)
         {
             squeezed_ratios.push_back(squeeze_into_octave(ratio));
@@ -116,19 +119,19 @@ std::vector<Ratio> PaletteGenerator::widen_ratios(
 {
     std::vector<Ratio> widened_ratios;
 
-    std::for_each(harmonic_ratios.begin(), harmonic_ratios.end(),
+    rng::for_each(harmonic_ratios,
         [&widened_ratios](const Ratio &ratio)
         {
             widened_ratios.push_back(octave_down(ratio));
         });
     
-    std::for_each(harmonic_ratios.begin(), harmonic_ratios.end(),
+    rng::for_each(harmonic_ratios,
         [&widened_ratios](const Ratio &ratio)
         {
             widened_ratios.push_back(ratio);
         });
 
-    std::for_each(harmonic_ratios.begin(), harmonic_ratios.end(),
+    rng::for_each(harmonic_ratios,
         [&widened_ratios](const Ratio &ratio)
         {
             widened_ratios.push_back(octave_up(ratio));
@@ -156,7 +159,7 @@ void PaletteGenerator::sort_ratios_ascending(std::vector<Ratio> &harmonic_ratios
         return r1.get_frequency_factor() < r2.get_frequency_factor();
     };
 
-    std::sort(harmonic_ratios.begin(), harmonic_ratios.end(), compare_ratios);
+    rng::sort(harmonic_ratios, compare_ratios);
 }
 
 }

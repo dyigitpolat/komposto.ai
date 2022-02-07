@@ -4,6 +4,9 @@
 
 #include <algorithm>
 
+namespace rng = std::ranges;
+
+
 namespace komposto
 {
 
@@ -23,7 +26,7 @@ Section SectionGenerator::generate(
         patterns_count - k__default_head_pattern_count
     };
 
-    std::fill_n(std::back_inserter(section.patterns_),
+    rng::fill_n(std::back_inserter(section.patterns_),
         tail_pattern_count, base_pattern);
 
     section.patterns_.push_back(pattern_generator_.generate(

@@ -7,6 +7,9 @@
 #include <cmath>
 #include <algorithm>
 
+namespace rng = std::ranges;
+
+
 namespace komposto
 {
 
@@ -122,7 +125,7 @@ void NotesToMidi::generate_midi_file(
             track, midi_ticks_end + 1, channel, k__zero_bend);    
     };
 
-    std::for_each(notes.begin(), notes.end(), add_midi_messages);
+    rng::for_each(notes, add_midi_messages);
 
     midi_file.write(file_name);
 }

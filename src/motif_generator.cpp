@@ -6,7 +6,8 @@
 #include "random.hpp"
 
 #include <algorithm>
-#include <cstdlib>
+
+namespace rng = std::ranges;
 
 namespace komposto
 {
@@ -26,8 +27,8 @@ Motif MotifGenerator::generate(
     Motif motif{rhythmic_motif.beats_count_};
 
     Tone previous_tone{palette.get_base_tone()};
-    std::for_each(
-        rhythmic_motif.timings_.begin(), rhythmic_motif.timings_.end(),
+    rng::for_each(
+        rhythmic_motif.timings_,
         [&motif, &palette, &previous_tone, this](const Timing &timing)
         {
             Tone new_tone{Harmonizer::pick_tone(palette, previous_tone)};

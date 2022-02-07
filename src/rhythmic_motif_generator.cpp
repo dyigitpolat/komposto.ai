@@ -3,6 +3,9 @@
 
 #include <algorithm>
 
+namespace rng = std::ranges;
+
+
 namespace komposto
 {
 
@@ -24,13 +27,12 @@ RhythmicMotif RhythmicMotifGenerator::generate(integer_t beats) const
 {
     std::vector<integer_t> sub_divisors(beats);
 
-    std::generate(sub_divisors.begin(), sub_divisors.end(), 
-        get_random_divisor);
+    rng::generate(sub_divisors, get_random_divisor);
 
     RhythmicMotif motif{beats};
     timestamp_beats_t start_time{};
 
-    std::for_each(sub_divisors.begin(), sub_divisors.end(),
+    rng::for_each(sub_divisors,
         [&motif, &start_time](integer_t divisor){
             duration_beats_t duration{1./divisor};
             while(divisor-- > 0)

@@ -1,6 +1,9 @@
 #include "palette.hpp"
 #include <algorithm>
 
+namespace rng = std::ranges;
+
+
 namespace komposto
 {
 
@@ -12,7 +15,7 @@ Tone Palette::get_base_tone() const
     };
 
     auto found_tone_iter{
-        std::find_if(tones_.cbegin(), tones_.cend(), is_base_tone)};
+        rng::find_if(tones_, is_base_tone)};
 
     bool tone_not_found{found_tone_iter == tones_.cend()};
     if(tone_not_found)

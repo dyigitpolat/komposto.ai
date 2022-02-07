@@ -5,6 +5,9 @@
 #include "random.hpp"
 
 #include <algorithm>
+#include <ranges>
+
+namespace rng = std::ranges;
 
 namespace komposto
 {
@@ -117,7 +120,9 @@ Composition CompositionGenerator::generate(
         rhythmic_complexity)};
     
     Composition composition{};
-    std::for_each(draft.section_drafts_.cbegin(), draft.section_drafts_.cend(),
+    rng::for_each(
+        rng::cbegin(draft.section_drafts_), 
+        rng::cend(draft.section_drafts_),
         [&composition, this](SectionDraft section_draft)
         {
             composition.sections_.push_back(generate_from_draft(section_draft));
