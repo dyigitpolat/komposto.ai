@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.16.3)
 project(komposto)
 
 # set the C++ standard
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 # /include as directory
 include_directories(include)
