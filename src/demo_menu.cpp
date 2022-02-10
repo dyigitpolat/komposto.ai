@@ -2,7 +2,7 @@
 
 //std headers
 #include <iostream>
-#include <numeric>
+#include <limits>
 
 DemoMenu::DemoMenu(const std::string &title) : m_title{title}
 {
